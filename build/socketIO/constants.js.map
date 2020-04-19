@@ -1,0 +1,1 @@
+{"version":3,"file":"constants.js","sourceRoot":"","sources":["../../src/socketIO/constants.ts"],"names":[],"mappings":";;AAEA,IAAM,UAAU,GAAc,EAAE,CAAA;AAChC,IAAM,eAAe,GAAW,EAAE,CAAA;AAClC,IAAM,eAAe,GAAW,EAAE,CAAA;AAElC,IAAM,SAAS,GAAG;IACd,UAAU,EAAG,UAAU;IACvB,eAAe,EAAG,eAAe;IACjC,eAAe,EAAG,eAAe;CACpC,CAAA;AAED,kBAAe,SAAS,CAAA"}
