@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var generalHelpers = {
     isNullOrEmpty: function (object) {
         if (object === null || object === "" || object === undefined) {
@@ -26,5 +27,5 @@ var generalHelpers = {
         return isArrayOfObjects;
     }
 };
-module.exports = generalHelpers;
+exports.default = generalHelpers;
 //# sourceMappingURL=generalHelpers.js.map

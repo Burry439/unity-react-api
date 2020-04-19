@@ -3,9 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var router = require('express').Router();
+//const router = require('express').Router()
 var dataAccess_1 = __importDefault(require("../dataLayer/dataAccess"));
 var queryStringHelpers_1 = __importDefault(require("../helpers/queryStringHelpers"));
+var express_1 = __importDefault(require("express"));
+var router = express_1.default.Router();
 router.get('/users', function (req, res) {
     var queryParams = req.query;
     //const queryParams = queryStringHelper.normalizeQueryStringParams(req.query.queryParams)

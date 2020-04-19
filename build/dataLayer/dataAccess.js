@@ -35,17 +35,31 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var baseModel_1 = __importDefault(require("./models/baseModel"));
+var getModel = function (modelType) {
+    if (Object.keys(baseModel_1.default).includes(modelType)) {
+        return baseModel_1.default[modelType];
+    }
+};
 var dataAccess = {
     get: function (modelType, filters, fields, skip, limit) {
+        if (fields === void 0) { fields = {}; }
+        if (skip === void 0) { skip = 0; }
+        if (limit === void 0) { limit = 1; }
         return __awaiter(this, void 0, void 0, function () {
-            var model;
+            var model, response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log(filters);
-                        model = require("./models/" + modelType);
-                        return [4 /*yield*/, model.find(JSON.parse(filters), fields, { skip: skip, limit: 1 })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                        model = getModel(modelType);
+                        return [4 /*yield*/, model.find(JSON.parse(filters), fields, { skip: skip, limit: limit })];
+                    case 1:
+                        response = _a.sent();
+                        return [2 /*return*/, response];
                 }
             });
         });
@@ -56,10 +70,8 @@ var dataAccess = {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log(modelType);
-                        console.log(entity);
-                        model = require("./models/" + modelType);
-                        return [4 /*yield*/, model.create(entity)];
+                        model = getModel(modelType);
+                        return [4 /*yield*/, model(entity).save()];
                     case 1:
                         res = _a.sent();
                         return [2 /*return*/, res];
@@ -98,5 +110,5 @@ var dataAccess = {
         });
     }
 };
-module.exports = dataAccess;
+exports.default = dataAccess;
 //# sourceMappingURL=dataAccess.js.map
