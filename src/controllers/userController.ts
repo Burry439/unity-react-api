@@ -6,7 +6,6 @@ import express from "express"
 const router : express.Router = express.Router()
 
 router.get('/users', (req : any, res : any) => {
- const queryParams = req.query
 //const queryParams = queryStringHelper.normalizeQueryStringParams(req.query.queryParams)
   dataAccess.get(req.query.model, req.query.filter).then((result) =>{
     return res.send(result)
