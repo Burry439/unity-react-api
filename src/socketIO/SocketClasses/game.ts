@@ -108,7 +108,7 @@ export default class Game {
     // }
 
     public disconnectedFromReact(playerId : string) : PlayerDisconnected{
-        console.log("in disconnect from react: " + playerId)
+       
         let disconnectPlayer : boolean = false; 
         let disconnectedPlayer : Player;
         this.players.forEach((player : Player, i : number) =>{

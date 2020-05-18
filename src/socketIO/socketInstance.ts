@@ -36,15 +36,15 @@ export default class SocketInstance {
                 if(!this.gameInstance.isDuplicatePlayer(user.id)){  
                     const newPlayer : Player = this.gameInstance.addNewPlayerFromReact(user.username,user.id)       
                     //tell me react client about all other users
-                    socket.emit("reactFirstSpawn", this.gameInstance.getPlayers())
+                    socket.emit("reactFirstSpawn", {allPLayers : this.gameInstance.getPlayers(), thisPlayerId : user.id})
                     //tell all unity and react clients about the new user
                     socket.broadcast.emit("reactSpawn",  newPlayer)
                     
-                } else{
-                    console.log("is dulicate")
-                    console.log( this.gameInstance.getPlayers())
+                } else{                  
                     //if its a duplicate add one to its instance count 
                     this.gameInstance.addToInstanceCount(user.id)
+                    socket.emit("duplicatePlayer",user.id)
+
                 }
             })
             
@@ -67,10 +67,15 @@ export default class SocketInstance {
 
             // if a user closes a tab or browser or refreshes
             socket.on("disconnect", () =>{
+                console.log("in disconect", thisPlayerId)
                 // if he has a tab still open remove from his instance count
                 const disconectedPlayer : PlayerDisconnected = this.gameInstance.disconnectedFromReact(thisPlayerId)
                 // if he discounected every where inform other players he discounnected
                 if(disconectedPlayer.disconnectPlayer){
+                    //we are crashing because it is making a call to  a unity sokcet that is closed
+
+                    //need to make unity disconnect through plugin
+
                     socket.broadcast.emit("disconnectFromReact", disconectedPlayer.player)
                 }    
             })

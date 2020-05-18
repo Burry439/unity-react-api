@@ -14,8 +14,8 @@ class ExpressServer {
     private router : express.Router;
     private server : Server;
     constructor(){
-        mongoose.connect ( process.env.MONGODB_URI,  { useNewUrlParser: true, useUnifiedTopology: true } )
-        mongoose.connection.on ( 'error' , console.error.bind ( console , 'connection error:' ) )
+        // mongoose.connect ( process.env.MONGODB_URI,  { useNewUrlParser: true,   useCreateIndex: true, useUnifiedTopology: true } )
+        // mongoose.connection.on ( 'error' , console.error.bind ( console , 'connection error:' ) )
         this.app  = express () 
         this.router = express.Router () 
     
@@ -29,7 +29,7 @@ class ExpressServer {
     
         this.app.use ( '/' , controllers )
      
-        this.app.use ( express.static ( __dirname ) )
+        this.app.use ("/", express.static ( __dirname  + "/frontend") )
     
         this.server   = http.createServer ( this.app )
         this.server.listen ( process.env.PORT || 8080 )

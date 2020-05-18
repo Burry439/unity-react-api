@@ -93,7 +93,6 @@ var Game = /** @class */ (function () {
     // }
     Game.prototype.disconnectedFromReact = function (playerId) {
         var _this = this;
-        console.log("in disconnect from react: " + playerId);
         var disconnectPlayer = false;
         var disconnectedPlayer;
         this.players.forEach(function (player, i) {
