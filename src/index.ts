@@ -1,5 +1,6 @@
 import express from 'express'
 import mongoose from 'mongoose'
+import path from "path"
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
 import http, { Server } from 'http'
@@ -31,6 +32,15 @@ class ExpressServer {
      
         this.app.use ("/", express.static ( __dirname  + "/frontend") )
     
+        this.app.get('/*', function(req, res) {
+            console.log("herer")
+            res.sendFile(path.join(__dirname  + "/frontend/index.html"), function(err) {
+              if (err) {
+                res.status(500).send(err)
+              }
+            })
+          })
+
         this.server   = http.createServer ( this.app )
         this.server.listen ( process.env.PORT || 8080 )
         this.socketInstance = SocketInstance.getSocketInstance(this.server) 
