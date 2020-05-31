@@ -43,6 +43,7 @@ var express_1 = __importDefault(require("express"));
 var bcryptjs_1 = __importDefault(require("bcryptjs"));
 var DB_1 = require("../dataLayer/DB");
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var mongoose_1 = __importDefault(require("mongoose"));
 var router = express_1.default.Router();
 var posts = [
     {
@@ -72,11 +73,37 @@ var authenticateToken = function (req, res, next) {
         next();
     });
 };
+router.get("/users/getTickets", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var tickets;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, DB_1.DB.Models.User.aggregate([
+                    {
+                        $match: { _id: mongoose_1.default.Types.ObjectId(req.query.id) },
+                    },
+                    {
+                        $lookup: { from: "challenges", localField: "completedChallenges", foreignField: "_id", as: "doc_completedChallenges" }
+                    },
+                    {
+                        $group: { "_id": "$doc_completedChallenges.reward" }
+                    },
+                    {
+                        $project: { "_id": 0, totalTickets: { "$sum": "$_id" } }
+                    },
+                ])];
+            case 1:
+                tickets = _a.sent();
+                console.log(tickets);
+                res.send(tickets[0]);
+                return [2 /*return*/];
+        }
+    });
+}); });
 router.post('/users/login', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var user, accessToken, respone, e_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, DB_1.DB.Models.User.findOne({ username: req.body.username })];
+            case 0: return [4 /*yield*/, DB_1.DB.Models.User.findOne({ username: req.body.username }).populate("completedChallenges")];
             case 1:
                 user = _a.sent();
                 console.log(user);
@@ -111,7 +138,7 @@ router.get("/users/test", authenticateToken, function (req, res) {
     res.json(posts.filter(function (post) { return post.username == req.user.username; }));
 });
 router.post('/users/signup', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var hashedPassword, user, accessToken, respone, _a, e_2;
+    var hashedPassword, user, respone, _a, e_2;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -122,7 +149,8 @@ router.post('/users/signup', function (req, res) { return __awaiter(void 0, void
                 user = new DB_1.DB.Models.User({
                     email: req.body.email,
                     username: req.body.username,
-                    password: hashedPassword
+                    password: hashedPassword,
+                    tickets: 0
                 });
                 _b.label = 2;
             case 2:
@@ -130,8 +158,8 @@ router.post('/users/signup', function (req, res) { return __awaiter(void 0, void
                 return [4 /*yield*/, user.save()];
             case 3:
                 _b.sent();
-                accessToken = generateAccessToken(user.toJSON());
-                respone = { user: user, accessToken: accessToken };
+                console.log(user);
+                respone = { user: user, accessToken: "ddd" };
                 res.send(respone);
                 return [3 /*break*/, 5];
             case 4:
