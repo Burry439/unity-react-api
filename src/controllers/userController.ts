@@ -6,6 +6,8 @@ import {IUser, User} from "../dataLayer/models/user"
 import jwt, { JsonWebTokenError } from "jsonwebtoken"
 import { Session } from 'inspector';
 import LoginSignUpRespone from '../dataLayer/interfaces/LoginSignUpRespone';
+import { Challenge } from '../dataLayer/models/challenge';
+import mongoose , { Schema } from 'mongoose';
 
 const router : express.Router = express.Router()
 
@@ -39,8 +41,28 @@ const authenticateToken = (req : any,res :any,next : Function) =>{
   })
 }
 
+router.get("/users/getTickets", async (req,res) =>{
+    const tickets = await DB.Models.User.aggregate([
+      {
+        $match : {_id : mongoose.Types.ObjectId(req.query.id)},
+      },
+      {
+        $lookup : {from: "challenges",localField: "completedChallenges",foreignField: "_id", as: "doc_completedChallenges"}
+      },
+      {
+        $group : {"_id" : "$doc_completedChallenges.reward"}
+      },
+      {
+        $project : {"_id" : 0, totalTickets :  {"$sum": "$_id"}}
+      },
+    ])
+
+    console.log(tickets)
+    res.send(tickets[0])
+})
+
 router.post('/users/login', async (req : any, res : any) => {
-  const user : any = await DB.Models.User.findOne({username : req.body.username})
+  const user : any = await DB.Models.User.findOne({username : req.body.username}).populate("completedChallenges")
   console.log(user)
     if(user === null){
       return res.status(404).send("cannot find user")
@@ -65,18 +87,19 @@ router.get("/users/test", authenticateToken, (req : any,res : any) =>{
 })
 
 router.post('/users/signup', async (req : any, res : any) => {
-
     try{
       const hashedPassword : String = await bcrypt.hash(req.body.password, 10)
       const user : IUser = new DB.Models.User ({
         email: req.body.email,
         username: req.body.username,
-        password: hashedPassword
+        password: hashedPassword,
+        tickets : 0
       })
          try{
           await user.save();
-          const accessToken : String = generateAccessToken(user.toJSON())
-          const respone : LoginSignUpRespone = {user : user, accessToken : accessToken} 
+          console.log(user)
+          //const accessToken : String = generateAccessToken(user.toJSON())
+          const respone : LoginSignUpRespone = {user : user, accessToken : "ddd"} 
           res.send(respone)
         }catch{
           res.status(401).send("duplicate user")
@@ -84,8 +107,6 @@ router.post('/users/signup', async (req : any, res : any) => {
     } catch(e){
       res.status(500).send(e);
     }
-
-
 });
 
 export default router
