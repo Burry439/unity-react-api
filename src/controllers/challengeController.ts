@@ -7,7 +7,7 @@ const router : express.Router = express.Router()
 
 router.post("/challenge/challengeCompleted", async (req : any, res : any) =>{
   try{
-   await DB.Models.Challenge.findOne({challengeName : req.body.name}, (err,challenge) =>{
+   await DB.Models.Challenge.findOne({challengeName : req.body.challengeName}, (err,challenge) =>{
        DB.Models.User.findOneAndUpdate({_id: req.body.userId, completedChallenges: {$nin: challenge._id }},
           {
             $addToSet : {completedChallenges : challenge._id},
