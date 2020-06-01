@@ -12,32 +12,32 @@ import { IGame } from '../dataLayer/models/game';
 
 const router : express.Router = express.Router()
 
-router.post("/game/challengeCompleted", async (req : any, res : any) =>{
-      try{
-       await DB.Models.Challenge.findOne({challengeName : req.body.name}, (err,challenge) =>{
-           DB.Models.User.findOneAndUpdate({_id: req.body.userId, completedChallenges: {$nin: challenge._id }},
-              {
-                $addToSet : {completedChallenges : challenge._id},
-                $inc : {tickets: challenge.reward}
-              }, {new:true},(err,user) =>{
-                console.log("in update user: ", user)
-                if(user){
-                  res.send(challenge)
-                } 
-                else{
-                  res.send(null)
-                }
+// router.post("/game/challengeCompleted", async (req : any, res : any) =>{
+//       try{
+//        await DB.Models.Challenge.findOne({challengeName : req.body.name}, (err,challenge) =>{
+//            DB.Models.User.findOneAndUpdate({_id: req.body.userId, completedChallenges: {$nin: challenge._id }},
+//               {
+//                 $addToSet : {completedChallenges : challenge._id},
+//                 $inc : {tickets: challenge.reward}
+//               }, {new:true},(err,user) =>{
+//                 console.log("in update user: ", user)
+//                 if(user){
+//                   res.send(challenge)
+//                 } 
+//                 else{
+//                   res.send(null)
+//                 }
 
-            if(err){
-              console.log(err)
-            }
-           })
-        })
+//             if(err){
+//               console.log(err)
+//             }
+//            })
+//         })
         
-      } catch(e){
-        res.send(e)
-      }
-})
+//       } catch(e){
+//         res.send(e)
+//       }
+// })
 
 router.get("/game/getGame", async (req,res) =>{
   console.log(req.query)

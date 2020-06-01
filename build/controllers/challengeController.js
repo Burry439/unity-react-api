@@ -42,25 +42,42 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var DB_1 = require("../dataLayer/DB");
 var router = express_1.default.Router();
-// router.post("/challenge/challengeCompleted", async (req : any, res : any) =>{
-//     console.log(req.body)
-//       try{
-//         DB.Models.Challenge.findOne({challengeName : req.body.challengeName}, (err,challenge) =>{
-//            DB.Models.User.updateOne({_id: req.body.userId, completedChallenges: {$nin: req.body.challengeId }},
-//               {
-//                 $addToSet : {completedChallenges : challenge._id},
-//                 $inc : {tickets: challenge.reward}
-//               },(err,user) =>{
-//             if(err) throw err
-//            })
-//           res.send("done")
-//         })
-//       } catch(e){
-//         res.send(e)
-//       }
-// })
+router.post("/challenge/challengeCompleted", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var e_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, DB_1.DB.Models.Challenge.findOne({ challengeName: req.body.name }, function (err, challenge) {
+                        DB_1.DB.Models.User.findOneAndUpdate({ _id: req.body.userId, completedChallenges: { $nin: challenge._id } }, {
+                            $addToSet: { completedChallenges: challenge._id },
+                            $inc: { tickets: challenge.reward }
+                        }, { new: true }, function (err, user) {
+                            console.log("in update user: ", user);
+                            if (user) {
+                                res.send(challenge);
+                            }
+                            else {
+                                res.send(null);
+                            }
+                            if (err) {
+                                console.log(err);
+                            }
+                        });
+                    })];
+            case 1:
+                _a.sent();
+                return [3 /*break*/, 3];
+            case 2:
+                e_1 = _a.sent();
+                res.send(e_1);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
 router.post('/challenge/createChallenge', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var challenge, _challenge, e_1, e_2;
+    var challenge, _challenge, e_2, e_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -84,14 +101,14 @@ router.post('/challenge/createChallenge', function (req, res) { return __awaiter
                 res.send("done");
                 return [3 /*break*/, 4];
             case 3:
-                e_1 = _a.sent();
-                console.log(e_1);
+                e_2 = _a.sent();
+                console.log(e_2);
                 res.status(401).send("challenge already exists");
                 return [3 /*break*/, 4];
             case 4: return [3 /*break*/, 6];
             case 5:
-                e_2 = _a.sent();
-                res.status(500).send(e_2);
+                e_3 = _a.sent();
+                res.status(500).send(e_3);
                 return [3 /*break*/, 6];
             case 6: return [2 /*return*/];
         }

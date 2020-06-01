@@ -1,34 +1,36 @@
-import queryStringHelper from '../helpers/queryStringHelpers';
 import express from "express"
-import bcrypt from "bcryptjs"
 import { DB } from "../dataLayer/DB"
-import {IUser, User} from "../dataLayer/models/user"
-import jwt, { JsonWebTokenError } from "jsonwebtoken"
-import { Session } from 'inspector';
-import LoginSignUpRespone from '../dataLayer/interfaces/LoginSignUpRespone';
-import { Challenge, IChallenge } from '../dataLayer/models/challenge';
-import { Schema } from 'mongoose';
+
+import { IChallenge } from '../dataLayer/models/challenge';
 
 const router : express.Router = express.Router()
 
-// router.post("/challenge/challengeCompleted", async (req : any, res : any) =>{
-//     console.log(req.body)
-//       try{
-//         DB.Models.Challenge.findOne({challengeName : req.body.challengeName}, (err,challenge) =>{
-//            DB.Models.User.updateOne({_id: req.body.userId, completedChallenges: {$nin: req.body.challengeId }},
-//               {
-//                 $addToSet : {completedChallenges : challenge._id},
-//                 $inc : {tickets: challenge.reward}
-//               },(err,user) =>{
-//             if(err) throw err
-//            })
-//           res.send("done")
-//         })
-        
-//       } catch(e){
-//         res.send(e)
-//       }
-// })
+router.post("/challenge/challengeCompleted", async (req : any, res : any) =>{
+  try{
+   await DB.Models.Challenge.findOne({challengeName : req.body.name}, (err,challenge) =>{
+       DB.Models.User.findOneAndUpdate({_id: req.body.userId, completedChallenges: {$nin: challenge._id }},
+          {
+            $addToSet : {completedChallenges : challenge._id},
+            $inc : {tickets: challenge.reward}
+          }, {new:true},(err,user) =>{
+            console.log("in update user: ", user)
+            if(user){
+              res.send(challenge)
+            } 
+            else{
+              res.send(null)
+            }
+
+        if(err){
+          console.log(err)
+        }
+       })
+    })
+    
+  } catch(e){
+    res.send(e)
+  }
+})
 
 router.post('/challenge/createChallenge', async (req : any, res : any) => {
     try{
