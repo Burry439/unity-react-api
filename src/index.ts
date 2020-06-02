@@ -5,12 +5,10 @@ import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
 import http, { Server } from 'http'
 import cors from 'cors'
-import SocketInstance from "./socketIO/socketInstance"
 import controllers from "./controllers/baseController";
 dotenv.config()
 
 class ExpressServer {
-    public socketInstance : SocketInstance;
     private app: express.Application;
     private router : express.Router;
     private server : Server;
@@ -30,11 +28,11 @@ class ExpressServer {
     
         this.app.use ( '/' , controllers )
      
-        this.app.use ("/", express.static ( __dirname  + "/frontend") )
+        this.app.use ("/", express.static ("build/frontend") )
     
         this.app.get('/*', function(req, res) {
             console.log("herer")
-            res.sendFile(path.join(__dirname  + "/frontend/index.html"), function(err) {
+            res.sendFile(path.join("build/frontend/index.html"), function(err) {
               if (err) {
                 res.status(500).send(err)
               }
@@ -43,7 +41,6 @@ class ExpressServer {
 
         this.server   = http.createServer ( this.app )
         this.server.listen ( process.env.PORT || 8080 )
-        this.socketInstance = SocketInstance.getSocketInstance(this.server) 
         console.log ( '=====================================' )
         console.log ( 'SERVER SETTINGSbbbb:' )
         console.log ( `Server running at - localhost:${ process.env.PORT }` )

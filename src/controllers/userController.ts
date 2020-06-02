@@ -31,7 +31,6 @@ const authenticateToken = (req : any,res :any,next : Function) =>{
   const authHeader = req.headers["authorization"]
   console.log(authHeader)
   const token = authHeader && authHeader.split(' ')[1]
-  console.log(token)
   if(token == null) return res.sendStatus(401)
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err : any,user : any) =>{
     console.log(user)
@@ -56,29 +55,24 @@ router.get("/users/getTickets", async (req,res) =>{
         $project : {"_id" : 0, totalTickets :  {"$sum": "$_id"}}
       },
     ])
-
-    console.log(tickets)
     res.send(tickets[0])
 })
 
 router.post('/users/login', async (req : any, res : any) => {
   const user : any = await DB.Models.User.findOne({username : req.body.username}).populate("completedChallenges")
-  console.log(user)
     if(user === null){
-      return res.status(404).send("cannot find user")
+      return res.status(404 ).send("username or password is incorrect")
     }
     try{
-      console.log(req.body.password, user.password)
       if(await bcrypt.compare(req.body.password, user.password)){
         const accessToken : String = generateAccessToken(user)
         const respone : LoginSignUpRespone = {user : user, accessToken : accessToken} 
         res.json(respone)
       }else{
-        res.status(401).send("incorrect Password")
+        res.status(404).send("username or password is incorrect")
       }
     } catch(e){
-      console.log(e)
-      res.status(500).send(e);
+      res.status(500).send("internal error");
     }
   });
 
@@ -97,15 +91,19 @@ router.post('/users/signup', async (req : any, res : any) => {
       })
          try{
           await user.save();
-          console.log(user)
           //const accessToken : String = generateAccessToken(user.toJSON())
           const respone : LoginSignUpRespone = {user : user, accessToken : "ddd"} 
           res.send(respone)
-        }catch{
-          res.status(401).send("duplicate user")
-        }    
+        }catch(err){
+          let field = err.message.split('.$')[1];
+          // now we have `email_1 dup key`
+          field = field.split(' dup key')[0];
+          field = field.substring(0, field.lastIndexOf('_'));
+          console.log(field)
+          res.status(404).send(`looks like someone already used that ${field}`)
+        }
     } catch(e){
-      res.status(500).send(e);
+      res.status(500).send("internal error");
     }
 });
 
