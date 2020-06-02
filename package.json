@@ -27,7 +27,7 @@
     "start": "npm run serve",
     "serve": "node ./build/index.js",
     "tsc": "tsc",
-    "deploy" : "tsc && git push heroku master"
+    "deploy" : "tsc && git add . && git commit -m 'quickdeploy' && git push heroku master"
   },
   "author": "",
   "license": "ISC",
