@@ -62,7 +62,6 @@ var authenticateToken = function (req, res, next) {
     var authHeader = req.headers["authorization"];
     console.log(authHeader);
     var token = authHeader && authHeader.split(' ')[1];
-    console.log(token);
     if (token == null)
         return res.sendStatus(401);
     jsonwebtoken_1.default.verify(token, process.env.ACCESS_TOKEN_SECRET, function (err, user) {
@@ -93,7 +92,6 @@ router.get("/users/getTickets", function (req, res) { return __awaiter(void 0, v
                 ])];
             case 1:
                 tickets = _a.sent();
-                console.log(tickets);
                 res.send(tickets[0]);
                 return [2 /*return*/];
         }
@@ -106,14 +104,12 @@ router.post('/users/login', function (req, res) { return __awaiter(void 0, void 
             case 0: return [4 /*yield*/, DB_1.DB.Models.User.findOne({ username: req.body.username }).populate("completedChallenges")];
             case 1:
                 user = _a.sent();
-                console.log(user);
                 if (user === null) {
-                    return [2 /*return*/, res.status(404).send("cannot find user")];
+                    return [2 /*return*/, res.status(404).send("username or password is incorrect")];
                 }
                 _a.label = 2;
             case 2:
                 _a.trys.push([2, 4, , 5]);
-                console.log(req.body.password, user.password);
                 return [4 /*yield*/, bcryptjs_1.default.compare(req.body.password, user.password)];
             case 3:
                 if (_a.sent()) {
@@ -122,13 +118,12 @@ router.post('/users/login', function (req, res) { return __awaiter(void 0, void 
                     res.json(respone);
                 }
                 else {
-                    res.status(401).send("incorrect Password");
+                    res.status(404).send("username or password is incorrect");
                 }
                 return [3 /*break*/, 5];
             case 4:
                 e_1 = _a.sent();
-                console.log(e_1);
-                res.status(500).send(e_1);
+                res.status(500).send("internal error");
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
         }
@@ -138,38 +133,42 @@ router.get("/users/test", authenticateToken, function (req, res) {
     res.json(posts.filter(function (post) { return post.username == req.user.username; }));
 });
 router.post('/users/signup', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var hashedPassword, user, respone, _a, e_2;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    var hashedPassword, user, respone, err_1, field, e_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
             case 0:
-                _b.trys.push([0, 6, , 7]);
+                _a.trys.push([0, 6, , 7]);
                 return [4 /*yield*/, bcryptjs_1.default.hash(req.body.password, 10)];
             case 1:
-                hashedPassword = _b.sent();
+                hashedPassword = _a.sent();
                 user = new DB_1.DB.Models.User({
                     email: req.body.email,
                     username: req.body.username,
                     password: hashedPassword,
                     tickets: 0
                 });
-                _b.label = 2;
+                _a.label = 2;
             case 2:
-                _b.trys.push([2, 4, , 5]);
+                _a.trys.push([2, 4, , 5]);
                 return [4 /*yield*/, user.save()];
             case 3:
-                _b.sent();
-                console.log(user);
+                _a.sent();
                 respone = { user: user, accessToken: "ddd" };
                 res.send(respone);
                 return [3 /*break*/, 5];
             case 4:
-                _a = _b.sent();
-                res.status(401).send("duplicate user");
+                err_1 = _a.sent();
+                field = err_1.message.split('.$')[1];
+                // now we have `email_1 dup key`
+                field = field.split(' dup key')[0];
+                field = field.substring(0, field.lastIndexOf('_'));
+                console.log(field);
+                res.status(404).send("looks like someone already used that " + field);
                 return [3 /*break*/, 5];
             case 5: return [3 /*break*/, 7];
             case 6:
-                e_2 = _b.sent();
-                res.status(500).send(e_2);
+                e_2 = _a.sent();
+                res.status(500).send("internal error");
                 return [3 /*break*/, 7];
             case 7: return [2 /*return*/];
         }

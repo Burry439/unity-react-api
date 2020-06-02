@@ -9,7 +9,6 @@ var body_parser_1 = __importDefault(require("body-parser"));
 var dotenv_1 = __importDefault(require("dotenv"));
 var http_1 = __importDefault(require("http"));
 var cors_1 = __importDefault(require("cors"));
-var socketInstance_1 = __importDefault(require("./socketIO/socketInstance"));
 var baseController_1 = __importDefault(require("./controllers/baseController"));
 dotenv_1.default.config();
 var ExpressServer = /** @class */ (function () {
@@ -24,10 +23,10 @@ var ExpressServer = /** @class */ (function () {
         this.app.use(cors_1.default({ 'origin': '*', 'methods': ['*', 'DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST'], 'allowedHeaders': ['*', 'authorization', 'content-type'] }));
         this.app.use(this.router);
         this.app.use('/', baseController_1.default);
-        this.app.use("/", express_1.default.static(__dirname + "/frontend"));
+        this.app.use("/", express_1.default.static("build/frontend"));
         this.app.get('/*', function (req, res) {
             console.log("herer");
-            res.sendFile(path_1.default.join(__dirname + "/frontend/index.html"), function (err) {
+            res.sendFile(path_1.default.join("build/frontend/index.html"), function (err) {
                 if (err) {
                     res.status(500).send(err);
                 }
@@ -35,7 +34,6 @@ var ExpressServer = /** @class */ (function () {
         });
         this.server = http_1.default.createServer(this.app);
         this.server.listen(process.env.PORT || 8080);
-        this.socketInstance = socketInstance_1.default.getSocketInstance(this.server);
         console.log('=====================================');
         console.log('SERVER SETTINGSbbbb:');
         console.log("Server running at - localhost:" + process.env.PORT);
