@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.User = void 0;
 var mongoose_1 = require("mongoose");
 var arrayUniquePlugin = require('mongoose-unique-array');
 ;
@@ -19,7 +20,7 @@ var User = /** @class */ (function () {
         get: function () {
             return this._model;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return User;

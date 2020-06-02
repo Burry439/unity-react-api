@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DB = void 0;
 var mongoose_1 = require("mongoose");
 var user_1 = require("./models/user");
 var game_1 = require("./models/game");
@@ -38,7 +39,7 @@ var DB = /** @class */ (function () {
             }
             return DB.instance._models;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     DB.prototype.connected = function () {
