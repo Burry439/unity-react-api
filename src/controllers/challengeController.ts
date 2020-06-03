@@ -5,6 +5,18 @@ import { IChallenge } from '../dataLayer/models/challenge';
 
 const router : express.Router = express.Router()
 
+
+router.get("/challenge/getchallenges", async (req,res) =>{
+    try{
+      await DB.Models.Challenge.find(req.headers.params, (err,challenges) =>{
+        if(err) res.status(err.status).send("Something went wrong")
+        res.send(challenges)
+      })
+    }catch(err){
+      res.status(err.status).send("Something went wrong")
+    }
+})
+
 router.post("/challenge/challengeCompleted", async (req : any, res : any) =>{
   try{
    await DB.Models.Challenge.findOne({challengeName : req.body.challengeName}, (err,challenge) =>{

@@ -27,6 +27,20 @@ const generateAccessToken = (user : any) =>{
 }
 
 
+router.get("/user/getusers", async (req,res) =>{
+  console.log("in useres")
+  try{
+    await DB.Models.User.find(req.headers.params, (err,users) =>{
+      if(err) res.status(err.status).send("Something went wrong")
+      res.send(users)
+    })
+  }catch(err){
+    res.status(err.status).send("Something went wrong")
+  }
+})
+
+
+
 const authenticateToken = (req : any,res :any,next : Function) =>{
   const authHeader = req.headers["authorization"]
   console.log(authHeader)
@@ -91,8 +105,8 @@ router.post('/users/signup', async (req : any, res : any) => {
       })
          try{
           await user.save();
-          //const accessToken : String = generateAccessToken(user.toJSON())
-          const respone : LoginSignUpRespone = {user : user, accessToken : "ddd"} 
+          const accessToken : String = generateAccessToken(user)
+          const respone : LoginSignUpRespone = {user : user, accessToken : accessToken} 
           res.send(respone)
         }catch(err){
           let field = err.message.split('.$')[1];
