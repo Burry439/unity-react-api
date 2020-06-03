@@ -30,9 +30,11 @@ class ExpressServer {
      
         this.app.use ("/", express.static ("build/frontend") )
     
-        this.app.get('/', function(req, res) {
+      console.log(process.env.ROOT_FOLDER)
+
+        this.app.get('/*', function(req, res) {
             //come up with better soulution
-            res.sendFile(path.join("build/frontend/index.html"), function(err) {
+            res.sendFile(path.join("build/frontend/index.html"),{ root: process.env.ROOT_FOLDER }, function(err) {
               if (err) {
                 res.status(500).send(err)
               }

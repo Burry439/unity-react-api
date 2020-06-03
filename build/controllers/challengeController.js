@@ -42,6 +42,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var DB_1 = require("../dataLayer/DB");
 var router = express_1.default.Router();
+router.get("/challenge/getchallenges", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var err_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, DB_1.DB.Models.Challenge.find(req.headers.params, function (err, challenges) {
+                        if (err)
+                            res.status(err.status).send("Something went wrong");
+                        res.send(challenges);
+                    })];
+            case 1:
+                _a.sent();
+                return [3 /*break*/, 3];
+            case 2:
+                err_1 = _a.sent();
+                res.status(err_1.status).send("Something went wrong");
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
 router.post("/challenge/challengeCompleted", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var e_1;
     return __generator(this, function (_a) {
