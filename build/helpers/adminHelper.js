@@ -53,7 +53,7 @@ var AdminHelper = /** @class */ (function () {
                         //having problem using regex with id this is a quik fix
                         if (field && value) {
                             console.log(value.length);
-                            if (field == "_id" && value.length !== 24) {
+                            if (field == "_id" && value.length == 24) {
                                 filter[field] = mongoose_1.Types.ObjectId(value);
                             }
                             else if (field != "_id") {

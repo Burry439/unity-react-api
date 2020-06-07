@@ -10,7 +10,7 @@ export class AdminHelper{
        //having problem using regex with id this is a quik fix
        if(field && value) {
         console.log(value.length)
-        if(field == "_id" && value.length !== 24){
+        if(field == "_id" && value.length == 24){
           filter[field] = Types.ObjectId(value)
         }else if(field != "_id") {
           filter[field] = {"$regex" : value,"$options": "i"}
