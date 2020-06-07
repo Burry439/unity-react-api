@@ -31,7 +31,25 @@ var DB = /** @class */ (function () {
             Game: new game_1.Game().model
             // this is where we initialise all models
         };
+        // this is used for getting info for the Admin Page
+        this._adminModels = {
+            User: this._models.User,
+            Challenge: this._models.Challenge,
+            Game: this._models.Game
+            // this is where we initialise all models
+        };
     }
+    Object.defineProperty(DB, "AdminModels", {
+        // i Made this for the admin helper so i can use one generic method
+        get: function () {
+            if (!DB.instance) {
+                DB.instance = new DB();
+            }
+            return DB.instance._adminModels;
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(DB, "Models", {
         get: function () {
             if (!DB.instance) {

@@ -41,26 +41,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var DB_1 = require("../dataLayer/DB");
+var adminHelper_1 = require("../helpers/adminHelper");
 var router = express_1.default.Router();
-router.get("/game/getgames", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var err_1;
+router.get("/game/admingetgames", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, DB_1.DB.Models.Game.find(req.headers.params, function (err, games) {
-                        if (err)
-                            res.status(err.status).send("Something went wrong");
-                        res.send(games);
-                    })];
+            case 0: return [4 /*yield*/, adminHelper_1.AdminHelper.getEntity("Game", req.query.field, req.query.value, req.query.skip, req.query.limit, ["challenges", "__v"], res, next)];
             case 1:
                 _a.sent();
-                return [3 /*break*/, 3];
-            case 2:
-                err_1 = _a.sent();
-                res.status(err_1.status).send("Something went wrong");
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                return [2 /*return*/];
         }
     });
 }); });

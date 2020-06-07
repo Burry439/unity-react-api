@@ -1,30 +1,24 @@
-import express from "express"
+import express, { NextFunction } from "express"
 import { DB } from "../dataLayer/DB"
 
 import { IChallenge } from '../dataLayer/models/challenge';
+import { AdminHelper } from "../helpers/adminHelper";
 
 const router : express.Router = express.Router()
 
 
-router.get("/challenge/getchallenges", async (req,res) =>{
-    try{
-      await DB.Models.Challenge.find(req.headers.params, (err,challenges) =>{
-        if(err) res.status(err.status).send("Something went wrong")
-        res.send(challenges)
-      })
-    }catch(err){
-      res.status(err.status).send("Something went wrong")
-    }
+router.get("/challenge/admingetchallenges", async (req,res,next : NextFunction) =>{
+  await AdminHelper.getEntity("Challenge", req.query.field,req.query.value, req.query.skip,  req.query.limit,  ["__v"], res,next)
 })
 
 router.post("/challenge/challengeCompleted", async (req : any, res : any) =>{
   try{
-   await DB.Models.Challenge.findOne({challengeName : req.body.challengeName}, (err,challenge) =>{
+   await DB.Models.Challenge.findOne({challengeName : req.body.challengeName}, (err : any,challenge : any) =>{
        DB.Models.User.findOneAndUpdate({_id: req.body.userId, completedChallenges: {$nin: challenge._id }},
           {
             $addToSet : {completedChallenges : challenge._id},
             $inc : {tickets: challenge.reward}
-          }, {new:true},(err,user) =>{
+          }, {new:true},(err : any,user : any) =>{
             console.log("in update user: ", user)
             if(user){
               res.send(challenge)
@@ -55,7 +49,7 @@ router.post('/challenge/createChallenge', async (req : any, res : any) => {
          try{
           let _challenge = await  challenge.save()
           console.log(_challenge)
-          DB.Models.Game.updateOne({name : _challenge.gameName}, {$push : {challenges : _challenge._id}},(err,game) =>{
+          DB.Models.Game.updateOne({name : _challenge.gameName}, {$push : {challenges : _challenge._id}},(err : any,game : any) =>{
             console.log(game)
           })
           res.send("done")

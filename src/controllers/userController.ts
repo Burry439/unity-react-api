@@ -1,5 +1,5 @@
 import queryStringHelper from '../helpers/queryStringHelpers';
-import express from "express"
+import express, { NextFunction } from "express"
 import bcrypt from "bcryptjs"
 import { DB } from "../dataLayer/DB"
 import {IUser, User} from "../dataLayer/models/user"
@@ -8,9 +8,9 @@ import { Session } from 'inspector';
 import LoginSignUpRespone from '../dataLayer/interfaces/LoginSignUpRespone';
 import { Challenge } from '../dataLayer/models/challenge';
 import mongoose , { Schema } from 'mongoose';
+import { AdminHelper } from '../helpers/adminHelper';
 
 const router : express.Router = express.Router()
-
 const posts = [
   {
     username : "burry",
@@ -27,16 +27,8 @@ const generateAccessToken = (user : any) =>{
 }
 
 
-router.get("/user/getusers", async (req,res) =>{
-  console.log("in useres")
-  try{
-    await DB.Models.User.find(req.headers.params, (err,users) =>{
-      if(err) res.status(err.status).send("Something went wrong")
-      res.send(users)
-    })
-  }catch(err){
-    res.status(err.status).send("Something went wrong")
-  }
+router.get("/user/admingetusers", async (req,res, next : NextFunction) =>{
+    await AdminHelper.getEntity("User", req.query.field, req.query.value, req.query.skip,  req.query.limit,  ["completedChallenges","__v"], res,next)
 })
 
 

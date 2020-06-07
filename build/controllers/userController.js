@@ -44,6 +44,7 @@ var bcryptjs_1 = __importDefault(require("bcryptjs"));
 var DB_1 = require("../dataLayer/DB");
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var mongoose_1 = __importDefault(require("mongoose"));
+var adminHelper_1 = require("../helpers/adminHelper");
 var router = express_1.default.Router();
 var posts = [
     {
@@ -58,28 +59,13 @@ var posts = [
 var generateAccessToken = function (user) {
     return jsonwebtoken_1.default.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15s" });
 };
-router.get("/user/getusers", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var err_1;
+router.get("/user/admingetusers", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0:
-                console.log("in useres");
-                _a.label = 1;
+            case 0: return [4 /*yield*/, adminHelper_1.AdminHelper.getEntity("User", req.query.field, req.query.value, req.query.skip, req.query.limit, ["completedChallenges", "__v"], res, next)];
             case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, DB_1.DB.Models.User.find(req.headers.params, function (err, users) {
-                        if (err)
-                            res.status(err.status).send("Something went wrong");
-                        res.send(users);
-                    })];
-            case 2:
                 _a.sent();
-                return [3 /*break*/, 4];
-            case 3:
-                err_1 = _a.sent();
-                res.status(err_1.status).send("Something went wrong");
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                return [2 /*return*/];
         }
     });
 }); });
@@ -158,7 +144,7 @@ router.get("/users/test", authenticateToken, function (req, res) {
     res.json(posts.filter(function (post) { return post.username == req.user.username; }));
 });
 router.post('/users/signup', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var hashedPassword, user, accessToken, respone, err_2, field, e_2;
+    var hashedPassword, user, accessToken, respone, err_1, field, e_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -183,8 +169,8 @@ router.post('/users/signup', function (req, res) { return __awaiter(void 0, void
                 res.send(respone);
                 return [3 /*break*/, 5];
             case 4:
-                err_2 = _a.sent();
-                field = err_2.message.split('.$')[1];
+                err_1 = _a.sent();
+                field = err_1.message.split('.$')[1];
                 // now we have `email_1 dup key`
                 field = field.split(' dup key')[0];
                 field = field.substring(0, field.lastIndexOf('_'));

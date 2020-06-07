@@ -13,8 +13,6 @@ var baseController_1 = __importDefault(require("./controllers/baseController"));
 dotenv_1.default.config();
 var ExpressServer = /** @class */ (function () {
     function ExpressServer() {
-        // mongoose.connect ( process.env.MONGODB_URI,  { useNewUrlParser: true,   useCreateIndex: true, useUnifiedTopology: true } )
-        // mongoose.connection.on ( 'error' , console.error.bind ( console , 'connection error:' ) )
         this.app = express_1.default();
         this.router = express_1.default.Router();
         /* set the body parser */
@@ -24,7 +22,9 @@ var ExpressServer = /** @class */ (function () {
         this.app.use(this.router);
         this.app.use('/', baseController_1.default);
         this.app.use("/", express_1.default.static("build/frontend"));
-        console.log(process.env.ROOT_FOLDER);
+        this.app.use(function (err, req, res, next) {
+            res.send(err.toString());
+        });
         this.app.get('/*', function (req, res) {
             //come up with better soulution
             res.sendFile(path_1.default.join("build/frontend/index.html"), { root: process.env.ROOT_FOLDER }, function (err) {

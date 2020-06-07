@@ -1,5 +1,5 @@
 import queryStringHelper from '../helpers/queryStringHelpers';
-import express from "express"
+import express, { NextFunction } from "express"
 import bcrypt from "bcryptjs"
 import { DB } from "../dataLayer/DB"
 import {IUser, User} from "../dataLayer/models/user"
@@ -9,23 +9,18 @@ import LoginSignUpRespone from '../dataLayer/interfaces/LoginSignUpRespone';
 import { Challenge, IChallenge } from '../dataLayer/models/challenge';
 import { Schema } from 'mongoose';
 import { IGame } from '../dataLayer/models/game';
+import { AdminHelper } from '../helpers/adminHelper';
 
 const router : express.Router = express.Router()
 
-router.get("/game/getgames", async (req,res) =>{
-  try{
-    await DB.Models.Game.find(req.headers.params, (err,games) =>{
-      if(err) res.status(err.status).send("Something went wrong")
-      res.send(games)
-    })
-  }catch(err){
-    res.status(err.status).send("Something went wrong")
-  }
+router.get("/game/admingetgames", async (req,res, next : NextFunction) =>{
+  await AdminHelper.getEntity("Game", req.query.field,req.query.value, req.query.skip,  req.query.limit,  ["challenges","__v"], res , next)
 })
+
 router.get("/game/getGame", async (req,res) =>{
   console.log(req.query)
     try{
-      DB.Models.Game.findOne({name : req.query.gameName}, (err,game) =>{
+      DB.Models.Game.findOne({name : req.query.gameName}, (err : any,game : any) =>{
         console.log(game)
         if(err) res.send(err)
         res.send(game)
