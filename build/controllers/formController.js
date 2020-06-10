@@ -58,7 +58,7 @@ router.post('/form/createform', function (req, res, next) {
 router.get('/form/getform', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var deserializedData;
     return __generator(this, function (_a) {
-        fs_1.default.readFile(process.env.ROOT_FOLDER + "/../reactForms/" + req.query.formName + ".json", function (err, data) { return __awaiter(void 0, void 0, void 0, function () {
+        fs_1.default.readFile(__dirname + "/../reactForms/" + req.query.formName + ".json", function (err, data) { return __awaiter(void 0, void 0, void 0, function () {
             var error;
             return __generator(this, function (_a) {
                 switch (_a.label) {
