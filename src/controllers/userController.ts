@@ -9,6 +9,7 @@ import LoginSignUpRespone from '../dataLayer/interfaces/LoginSignUpRespone';
 import { Challenge } from '../dataLayer/models/challenge';
 import mongoose , { Schema } from 'mongoose';
 import { AdminHelper } from '../helpers/adminHelper';
+import  _ from "underscore"
 
 const router : express.Router = express.Router()
 const posts = [
@@ -25,49 +26,34 @@ const posts = [
 const generateAccessToken = (user : any) =>{
   return jwt.sign(user.toJSON(),process.env.ACCESS_TOKEN_SECRET, {expiresIn: "15s"})
 }
-
+router.put("/user/adminupdateuser",(req,res,next) =>{
+  AdminHelper.updateEntity("User",req.body,res,next)
+})
 
 router.get("/user/admingetusers", async (req,res, next : NextFunction) =>{
-    await AdminHelper.getEntity("User", req.query.field, req.query.value, req.query.skip,  req.query.limit,  ["completedChallenges","__v"], res,next)
+    await AdminHelper.getEntity("User", req.query.field, req.query.value, req.query.skip,  req.query.limit,  ["completedChallenges","__v", "password"], res,next)
 })
 
 
 
 const authenticateToken = (req : any,res :any,next : Function) =>{
   const authHeader = req.headers["authorization"]
-  console.log(authHeader)
   const token = authHeader && authHeader.split(' ')[1]
   if(token == null) return res.sendStatus(401)
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err : any,user : any) =>{
-    console.log(user)
     if(err) return res.sendStatus(403)
     req.user = user
     next()
   })
 }
 
-router.get("/users/getTickets", async (req,res) =>{
-    const tickets = await DB.Models.User.aggregate([
-      {
-        $match : {_id : mongoose.Types.ObjectId(req.query.id)},
-      },
-      {
-        $lookup : {from: "challenges",localField: "completedChallenges",foreignField: "_id", as: "doc_completedChallenges"}
-      },
-      {
-        $group : {"_id" : "$doc_completedChallenges.reward"}
-      },
-      {
-        $project : {"_id" : 0, totalTickets :  {"$sum": "$_id"}}
-      },
-    ])
-    res.send(tickets[0])
-})
-
-router.post('/users/login', async (req : any, res : any) => {
+// 
+router.post('/user/login', async (req : any, res : any, next) => {
   const user : any = await DB.Models.User.findOne({username : req.body.username}).populate("completedChallenges")
     if(user === null){
-      return res.status(404 ).send("username or password is incorrect")
+      const error = new Error("username or password is incorrect")
+      res.status(404)
+      next(error)
     }
     try{
       if(await bcrypt.compare(req.body.password, user.password)){
@@ -75,18 +61,52 @@ router.post('/users/login', async (req : any, res : any) => {
         const respone : LoginSignUpRespone = {user : user, accessToken : accessToken} 
         res.json(respone)
       }else{
-        res.status(404).send("username or password is incorrect")
+        const error = new Error("username or password is incorrect")
+        res.status(404)
+        next(error)
       }
     } catch(e){
-      res.status(500).send("internal error");
+      const error = new Error("internal error")
+      res.status(500)
+      next(error)
     }
   });
 
-router.get("/users/test", authenticateToken, (req : any,res : any) =>{
-    res.json(posts.filter(post => post.username == req.user.username))
+router.post('/user/createuser', async (req,res,next) =>{
+  try{
+    const hashedPassword : String = await bcrypt.hash(req.body.password, 10)
+    const user : IUser = new DB.Models.User({
+      email: req.body.email,
+      username: req.body.username,
+      password: hashedPassword,
+      tickets : 0
+    })
+       try{
+        await user.save((err, user) =>{ 
+          if(err){
+            const error = new Error("user already exists")
+            res.status(401)
+            next(error)
+          }  
+          else{
+            res.send( _.omit(user.toJSON(), "completedChallenges","__v", "password"))
+          }
+        });
+      
+      }catch(e)
+      {
+        const error = new Error("user already exists")
+        res.status(401)
+        next(error)
+      }    
+  } catch(e){
+    const error = new Error("Internal server error")
+    res.status(500)
+    next(error)
+  }
 })
 
-router.post('/users/signup', async (req : any, res : any) => {
+router.post('/user/signup', async (req : any, res : any,next) => {
     try{
       const hashedPassword : String = await bcrypt.hash(req.body.password, 10)
       const user : IUser = new DB.Models.User ({
@@ -105,12 +125,46 @@ router.post('/users/signup', async (req : any, res : any) => {
           // now we have `email_1 dup key`
           field = field.split(' dup key')[0];
           field = field.substring(0, field.lastIndexOf('_'));
-          console.log(field)
-          res.status(404).send(`looks like someone already used that ${field}`)
+          const error = new Error(`looks like someone already used that ${field}`)
+          res.status(404)
+          next(error)
         }
     } catch(e){
-      res.status(500).send("internal error");
+      const error = new Error(`internal error`)
+      res.status(500)
+      next(error)
     }
+
+    // router.
+
+    router.get("/user/test", authenticateToken, (req : any,res : any) =>{
+      res.json(posts.filter(post => post.username == req.user.username))
+  })
+  
+
+
 });
 
 export default router
+
+
+//for refrence 
+
+//router.get("/user/getTickets", async (req,res) =>{
+  //     const tickets = await DB.Models.User.aggregate([
+  //       {
+  //         $match : {_id : mongoose.Types.ObjectId(req.query.id)},
+  //       },
+  //       {
+  //         $lookup : {from: "challenges",localField: "completedChallenges",foreignField: "_id", as: "doc_completedChallenges"}
+  //       },
+  //       {
+  //         $group : {"_id" : "$doc_completedChallenges.reward"}
+  //       },
+  //       {
+  //         $project : {"_id" : 0, totalTickets :  {"$sum": "$_id"}}
+  //       },
+  //     ])
+  //     res.send(tickets[0])
+  // })
+  

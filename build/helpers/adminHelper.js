@@ -82,7 +82,7 @@ var AdminHelper = /** @class */ (function () {
                                                     totalCount = count;
                                                     // if we found something send it to client
                                                     if (totalCount > 0 && entities.length) {
-                                                        res.status(200).send({ entities: entities, totalCount: totalCount });
+                                                        res.status(200).send({ entities: entities, totalCount: totalCount, exclude: exclude });
                                                         // if we do not find something send just the fields to client
                                                     }
                                                     else {
@@ -91,7 +91,7 @@ var AdminHelper = /** @class */ (function () {
                                                             headerFields_1[field] = field;
                                                         });
                                                         var headers = [headerFields_1];
-                                                        res.status(200).send({ headers: headers, totalCount: totalCount });
+                                                        res.status(200).send({ headers: headers, totalCount: totalCount, exclude: exclude });
                                                     }
                                                 })];
                                         case 1:
@@ -99,7 +99,7 @@ var AdminHelper = /** @class */ (function () {
                                             return [2 /*return*/];
                                     }
                                 });
-                            }); }).select(exclude.map(function (field) { return "-" + field; }))];
+                            }); })];
                     case 2:
                         _a.sent();
                         return [3 /*break*/, 4];
@@ -110,6 +110,37 @@ var AdminHelper = /** @class */ (function () {
                         return [2 /*return*/, next(error)];
                     case 4: return [2 /*return*/];
                 }
+            });
+        });
+    };
+    AdminHelper.updateEntity = function (entityType, entity, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var error;
+            return __generator(this, function (_a) {
+                try {
+                    DB_1.DB.AdminModels[entityType].findByIdAndUpdate(entity._id, { $set: entity }, { new: true }, function (err, entity) {
+                        if (err) {
+                            var error = new Error("something went wrong");
+                            res.status(500);
+                            next(error);
+                        }
+                        else if (!entity) {
+                            var error = new Error("whoops cant find that " + entityType);
+                            res.status(404);
+                            next(error);
+                        }
+                        else {
+                            console.log("updated " + entityType + ": " + entity);
+                            res.send(entity);
+                        }
+                    });
+                }
+                catch (_b) {
+                    error = new Error("something went wrong");
+                    res.status(500);
+                    next(error);
+                }
+                return [2 /*return*/];
             });
         });
     };

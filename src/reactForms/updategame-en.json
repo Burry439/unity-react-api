@@ -1,0 +1,1 @@
+{"config":{"buttonText":"Update game","spinner":true},"fields":[{"label":"name","placeholder":"Enter the Name of the game","required":true}]}

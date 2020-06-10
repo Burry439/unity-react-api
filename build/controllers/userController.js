@@ -43,8 +43,8 @@ var express_1 = __importDefault(require("express"));
 var bcryptjs_1 = __importDefault(require("bcryptjs"));
 var DB_1 = require("../dataLayer/DB");
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-var mongoose_1 = __importDefault(require("mongoose"));
 var adminHelper_1 = require("../helpers/adminHelper");
+var underscore_1 = __importDefault(require("underscore"));
 var router = express_1.default.Router();
 var posts = [
     {
@@ -59,10 +59,13 @@ var posts = [
 var generateAccessToken = function (user) {
     return jsonwebtoken_1.default.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15s" });
 };
+router.put("/user/adminupdateuser", function (req, res, next) {
+    adminHelper_1.AdminHelper.updateEntity("User", req.body, res, next);
+});
 router.get("/user/admingetusers", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, adminHelper_1.AdminHelper.getEntity("User", req.query.field, req.query.value, req.query.skip, req.query.limit, ["completedChallenges", "__v"], res, next)];
+            case 0: return [4 /*yield*/, adminHelper_1.AdminHelper.getEntity("User", req.query.field, req.query.value, req.query.skip, req.query.limit, ["completedChallenges", "__v", "password"], res, next)];
             case 1:
                 _a.sent();
                 return [2 /*return*/];
@@ -71,52 +74,28 @@ router.get("/user/admingetusers", function (req, res, next) { return __awaiter(v
 }); });
 var authenticateToken = function (req, res, next) {
     var authHeader = req.headers["authorization"];
-    console.log(authHeader);
     var token = authHeader && authHeader.split(' ')[1];
     if (token == null)
         return res.sendStatus(401);
     jsonwebtoken_1.default.verify(token, process.env.ACCESS_TOKEN_SECRET, function (err, user) {
-        console.log(user);
         if (err)
             return res.sendStatus(403);
         req.user = user;
         next();
     });
 };
-router.get("/users/getTickets", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var tickets;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, DB_1.DB.Models.User.aggregate([
-                    {
-                        $match: { _id: mongoose_1.default.Types.ObjectId(req.query.id) },
-                    },
-                    {
-                        $lookup: { from: "challenges", localField: "completedChallenges", foreignField: "_id", as: "doc_completedChallenges" }
-                    },
-                    {
-                        $group: { "_id": "$doc_completedChallenges.reward" }
-                    },
-                    {
-                        $project: { "_id": 0, totalTickets: { "$sum": "$_id" } }
-                    },
-                ])];
-            case 1:
-                tickets = _a.sent();
-                res.send(tickets[0]);
-                return [2 /*return*/];
-        }
-    });
-}); });
-router.post('/users/login', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, accessToken, respone, e_1;
+// 
+router.post('/user/login', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var user, error, accessToken, respone, error, e_1, error;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, DB_1.DB.Models.User.findOne({ username: req.body.username }).populate("completedChallenges")];
             case 1:
                 user = _a.sent();
                 if (user === null) {
-                    return [2 /*return*/, res.status(404).send("username or password is incorrect")];
+                    error = new Error("username or password is incorrect");
+                    res.status(404);
+                    next(error);
                 }
                 _a.label = 2;
             case 2:
@@ -129,22 +108,71 @@ router.post('/users/login', function (req, res) { return __awaiter(void 0, void 
                     res.json(respone);
                 }
                 else {
-                    res.status(404).send("username or password is incorrect");
+                    error = new Error("username or password is incorrect");
+                    res.status(404);
+                    next(error);
                 }
                 return [3 /*break*/, 5];
             case 4:
                 e_1 = _a.sent();
-                res.status(500).send("internal error");
+                error = new Error("internal error");
+                res.status(500);
+                next(error);
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
         }
     });
 }); });
-router.get("/users/test", authenticateToken, function (req, res) {
-    res.json(posts.filter(function (post) { return post.username == req.user.username; }));
-});
-router.post('/users/signup', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var hashedPassword, user, accessToken, respone, err_1, field, e_2;
+router.post('/user/createuser', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var hashedPassword, user, e_2, error, e_3, error;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 6, , 7]);
+                return [4 /*yield*/, bcryptjs_1.default.hash(req.body.password, 10)];
+            case 1:
+                hashedPassword = _a.sent();
+                user = new DB_1.DB.Models.User({
+                    email: req.body.email,
+                    username: req.body.username,
+                    password: hashedPassword,
+                    tickets: 0
+                });
+                _a.label = 2;
+            case 2:
+                _a.trys.push([2, 4, , 5]);
+                return [4 /*yield*/, user.save(function (err, user) {
+                        if (err) {
+                            var error = new Error("user already exists");
+                            res.status(401);
+                            next(error);
+                        }
+                        else {
+                            res.send(underscore_1.default.omit(user.toJSON(), "completedChallenges", "__v", "password"));
+                        }
+                    })];
+            case 3:
+                _a.sent();
+                return [3 /*break*/, 5];
+            case 4:
+                e_2 = _a.sent();
+                error = new Error("user already exists");
+                res.status(401);
+                next(error);
+                return [3 /*break*/, 5];
+            case 5: return [3 /*break*/, 7];
+            case 6:
+                e_3 = _a.sent();
+                error = new Error("Internal server error");
+                res.status(500);
+                next(error);
+                return [3 /*break*/, 7];
+            case 7: return [2 /*return*/];
+        }
+    });
+}); });
+router.post('/user/signup', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var hashedPassword, user, accessToken, respone, err_1, field, error, e_4, error;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -174,17 +202,43 @@ router.post('/users/signup', function (req, res) { return __awaiter(void 0, void
                 // now we have `email_1 dup key`
                 field = field.split(' dup key')[0];
                 field = field.substring(0, field.lastIndexOf('_'));
-                console.log(field);
-                res.status(404).send("looks like someone already used that " + field);
+                error = new Error("looks like someone already used that " + field);
+                res.status(404);
+                next(error);
                 return [3 /*break*/, 5];
             case 5: return [3 /*break*/, 7];
             case 6:
-                e_2 = _a.sent();
-                res.status(500).send("internal error");
+                e_4 = _a.sent();
+                error = new Error("internal error");
+                res.status(500);
+                next(error);
                 return [3 /*break*/, 7];
-            case 7: return [2 /*return*/];
+            case 7:
+                // router.
+                router.get("/user/test", authenticateToken, function (req, res) {
+                    res.json(posts.filter(function (post) { return post.username == req.user.username; }));
+                });
+                return [2 /*return*/];
         }
     });
 }); });
 exports.default = router;
+//for refrence 
+//router.get("/user/getTickets", async (req,res) =>{
+//     const tickets = await DB.Models.User.aggregate([
+//       {
+//         $match : {_id : mongoose.Types.ObjectId(req.query.id)},
+//       },
+//       {
+//         $lookup : {from: "challenges",localField: "completedChallenges",foreignField: "_id", as: "doc_completedChallenges"}
+//       },
+//       {
+//         $group : {"_id" : "$doc_completedChallenges.reward"}
+//       },
+//       {
+//         $project : {"_id" : 0, totalTickets :  {"$sum": "$_id"}}
+//       },
+//     ])
+//     res.send(tickets[0])
+// })
 //# sourceMappingURL=userController.js.map

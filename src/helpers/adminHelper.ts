@@ -16,7 +16,6 @@ export class AdminHelper{
           filter[field] = {"$regex" : value,"$options": "i"}
         }            
       }
-
         try{
             await DB.AdminModels[entityType].find(filter, {}, { skip: parseInt(skip), limit: parseInt(limit)}, async (err : Error,entities : any) =>{
             if(err){
@@ -34,7 +33,7 @@ export class AdminHelper{
               totalCount = count
               // if we found something send it to client
               if(totalCount > 0 && entities.length){               
-               res.status(200).send( {entities : entities, totalCount : totalCount})
+               res.status(200).send( {entities : entities, totalCount : totalCount,exclude : exclude})
                 // if we do not find something send just the fields to client
               }else{
                let headerFields : any = {}
@@ -42,10 +41,10 @@ export class AdminHelper{
                     headerFields[field] = field
                 })
                 const headers = [headerFields]
-                res.status(200).send( {headers : headers, totalCount : totalCount})
+                res.status(200).send( {headers : headers, totalCount : totalCount, exclude : exclude})
               }
             })
-          }).select(exclude.map((field) : string => `-${field}`))
+          })
         }catch(err){
 
           res.status(500)
@@ -53,4 +52,31 @@ export class AdminHelper{
           return next(error)
         } 
     }
+
+    public static async updateEntity(entityType : string, entity : any,res : Response,next : NextFunction){
+      try{
+        DB.AdminModels[entityType].findByIdAndUpdate(entity._id, { $set: entity },{new: true}, (err : Error,entity : any) =>{
+          if(err){
+            const error = new Error(`something went wrong`)
+            res.status(500)
+            next(error)
+         
+          }
+          else if(!entity){
+            const error = new Error(`whoops cant find that ${entityType}`)
+            res.status(404)
+            next(error)
+          }
+          else{
+            console.log(`updated ${entityType}: ${entity}`  )
+            res.send(entity)
+          }
+      })
+      }catch{
+        const error = new Error(`something went wrong`)
+        res.status(500)
+        next(error)
+      }
+    }
+
 }

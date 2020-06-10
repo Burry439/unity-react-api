@@ -42,7 +42,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var DB_1 = require("../dataLayer/DB");
 var adminHelper_1 = require("../helpers/adminHelper");
+var underscore_1 = __importDefault(require("underscore"));
 var router = express_1.default.Router();
+router.put("/challenge/adminupdatechallenge", function (req, res, next) {
+    adminHelper_1.AdminHelper.updateEntity("Challenge", req.body, res, next);
+});
 router.get("/challenge/admingetchallenges", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -87,12 +91,13 @@ router.post("/challenge/challengeCompleted", function (req, res) { return __awai
         }
     });
 }); });
-router.post('/challenge/createChallenge', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var challenge, _challenge, e_2, e_3;
+router.post('/challenge/createchallenge', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var challenge, _challenge_1, e_2, error, e_3, error;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 5, , 6]);
+                console.log(req.body);
                 challenge = new DB_1.DB.Models.Challenge({
                     challengeName: req.body.challengeName,
                     gameName: req.body.gameName,
@@ -104,22 +109,35 @@ router.post('/challenge/createChallenge', function (req, res) { return __awaiter
                 _a.trys.push([1, 3, , 4]);
                 return [4 /*yield*/, challenge.save()];
             case 2:
-                _challenge = _a.sent();
-                console.log(_challenge);
-                DB_1.DB.Models.Game.updateOne({ name: _challenge.gameName }, { $push: { challenges: _challenge._id } }, function (err, game) {
-                    console.log(game);
-                });
-                res.send("done");
+                _challenge_1 = _a.sent();
+                DB_1.DB.Models.Game.updateOne({ name: _challenge_1.gameName }, { $push: { challenges: _challenge_1._id } }, function (err, game) { return __awaiter(void 0, void 0, void 0, function () {
+                    var error;
+                    return __generator(this, function (_a) {
+                        if (game.n != 1) {
+                            DB_1.DB.Models.Challenge.findByIdAndDelete(_challenge_1._id);
+                            error = new Error("Game by the name: " + _challenge_1.gameName + " does not exist");
+                            res.status(404);
+                            next(error);
+                        }
+                        else {
+                            res.send(underscore_1.default.omit(_challenge_1.toJSON(), "__v"));
+                        }
+                        return [2 /*return*/];
+                    });
+                }); });
                 return [3 /*break*/, 4];
             case 3:
                 e_2 = _a.sent();
-                console.log(e_2);
-                res.status(401).send("challenge already exists");
+                error = new Error("challenge already exists or the game does not exist");
+                res.status(401);
+                next(error);
                 return [3 /*break*/, 4];
             case 4: return [3 /*break*/, 6];
             case 5:
                 e_3 = _a.sent();
-                res.status(500).send(e_3);
+                error = new Error("Internal Server Error");
+                res.status(500);
+                next(error);
                 return [3 /*break*/, 6];
             case 6: return [2 /*return*/];
         }

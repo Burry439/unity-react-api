@@ -8,6 +8,7 @@
     "@types/jsonwebtoken": "^8.3.9",
     "@types/mongoose-unique-validator": "^1.0.4",
     "@types/socket.io": "^2.1.4",
+    "@types/underscore": "^1.10.0",
     "bcrypt-nodejs": "0.0.3",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
@@ -20,14 +21,15 @@
     "mongoose-unique-validator": "^2.0.3",
     "short-id": "0.1.0-1",
     "socket.io": "^2.3.0",
-    "ts-node-dev": "^1.0.0-pre.40"
+    "ts-node-dev": "^1.0.0-pre.40",
+    "underscore": "^1.10.2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run serve",
     "serve": "node ./build/index.js",
     "tsc": "tsc",
-    "deploy" : "tsc && git add . && git commit -m 'quickdeploy' && git push heroku master"
+    "deploy": "tsc && git add . && git commit -m 'quickdeploy' && git push heroku master"
   },
   "author": "",
   "license": "ISC",

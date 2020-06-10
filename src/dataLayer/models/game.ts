@@ -13,7 +13,7 @@ export class Game {
 
     constructor() {
         const schema =  new Schema({
-          name: { type: String, required: true },
+          name: { type: String, required: true,unique: true},
           challenges : [{type : Schema.Types.ObjectId, ref : "Challenge"}],
            
         });

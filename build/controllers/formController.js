@@ -39,78 +39,65 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var fs_1 = __importDefault(require("fs"));
 var express_1 = __importDefault(require("express"));
 var DB_1 = require("../dataLayer/DB");
-var adminHelper_1 = require("../helpers/adminHelper");
 var router = express_1.default.Router();
-router.get("/game/admingetgames", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.post('/form/createform', function (req, res, next) {
+    try {
+        var data = JSON.stringify(req.body.data);
+        fs_1.default.writeFileSync(__dirname + "/../reactForms/" + req.body.formName + "-" + req.body.language + ".json", data);
+        res.send("done");
+    }
+    catch (_a) {
+        var error = new Error("Internal Server Error");
+        res.status(500);
+        next(error);
+    }
+});
+router.get('/form/getform', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var deserializedData;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, adminHelper_1.AdminHelper.getEntity("Game", req.query.field, req.query.value, req.query.skip, req.query.limit, ["challenges", "__v"], res, next)];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); });
-router.get("/game/adminupdategame", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        adminHelper_1.AdminHelper.updateEntity("Game", req.body, res, next);
-        return [2 /*return*/];
-    });
-}); });
-router.get("/game/getGame", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        console.log(req.query);
-        try {
-            DB_1.DB.Models.Game.findOne({ name: req.query.gameName }, function (err, game) {
-                console.log(game);
-                if (err)
-                    res.send(err);
-                res.send(game);
-            });
-        }
-        catch (e) {
-            res.send(e);
-        }
-        return [2 /*return*/];
-    });
-}); });
-router.post('/game/createGame', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var game, e_1, error;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                console.log(req.body);
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 3, , 4]);
-                game = new DB_1.DB.Models.Game({
-                    name: req.body.name,
-                    challenges: [],
-                });
-                return [4 /*yield*/, game.save(function (err, game) {
+        fs_1.default.readFile(__dirname + "/../reactForms/" + req.query.formName + ".json", function (err, data) { return __awaiter(void 0, void 0, void 0, function () {
+            var error;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
                         if (err) {
-                            var error = new Error("Looks like this game already exists");
-                            res.status(500);
-                            next(error);
+                            error = new Error("Cannot find form with name " + req.query.formName);
+                            res.status(404);
+                            return [2 /*return*/, next(error)];
                         }
-                        else {
-                            res.send(game);
-                        }
-                    })];
-            case 2:
-                _a.sent();
-                return [3 /*break*/, 4];
-            case 3:
-                e_1 = _a.sent();
-                error = new Error("Internal server error");
-                res.status(500);
-                next(error);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
-        }
+                        // deserialize Buffer
+                        deserializedData = JSON.parse(data.toString("utf-8"));
+                        // get options for select if we have one
+                        return [4 /*yield*/, Promise.all(deserializedData.fields.map(function (field, i) { return __awaiter(void 0, void 0, void 0, function () {
+                                var selectobject, entity;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            if (!(field.type == "select")) return [3 /*break*/, 2];
+                                            selectobject = { "_id": 1 };
+                                            selectobject[field.displayname] = 1;
+                                            return [4 /*yield*/, DB_1.DB.AdminModels[field.entity].find().select(selectobject)];
+                                        case 1:
+                                            entity = _a.sent();
+                                            field.options = entity;
+                                            _a.label = 2;
+                                        case 2: return [2 /*return*/];
+                                    }
+                                });
+                            }); }))];
+                    case 1:
+                        // get options for select if we have one
+                        _a.sent();
+                        res.send(deserializedData);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        return [2 /*return*/];
     });
 }); });
 exports.default = router;
-//# sourceMappingURL=gameController.js.map
+//# sourceMappingURL=formController.js.map

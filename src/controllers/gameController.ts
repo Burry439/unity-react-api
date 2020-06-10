@@ -17,6 +17,10 @@ router.get("/game/admingetgames", async (req,res, next : NextFunction) =>{
   await AdminHelper.getEntity("Game", req.query.field,req.query.value, req.query.skip,  req.query.limit,  ["challenges","__v"], res , next)
 })
 
+router.get("/game/adminupdategame", async (req,res, next : NextFunction) =>{
+  AdminHelper.updateEntity("Game",req.body,res,next)
+})
+
 router.get("/game/getGame", async (req,res) =>{
   console.log(req.query)
     try{
@@ -31,26 +35,26 @@ router.get("/game/getGame", async (req,res) =>{
 
 })
 
-router.post('/game/createGame', async (req : any, res : any) => {
+router.post('/game/createGame', async (req : any, res : any,next) => {
   console.log(req.body)
     try{
       const game : IGame = new DB.Models.Game({
         name: req.body.name,
-        challenges : req.body.challenges,
+        challenges :[],
       })
-         try{
           await game.save((err,game) =>{   
-            console.log(game)
-            res.send("game created")
+            if(err){
+              const error = new Error("Looks like this game already exists")
+              res.status(500)
+              next(error)
+            }else{
+              res.send(game)
+            }
           });
-        
-        }catch(e)
-        {
-          console.log(e)
-          res.status(401).send("challenge already exists")
-        }    
     } catch(e){
-      res.status(500).send(e);
+      const error = new Error("Internal server error")
+      res.status(500)
+      next(error)
     }
 });
 

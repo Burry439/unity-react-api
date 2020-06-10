@@ -1,11 +1,14 @@
 import express, { NextFunction } from "express"
 import { DB } from "../dataLayer/DB"
-
-import { IChallenge } from '../dataLayer/models/challenge';
+import { IChallenge, Challenge } from '../dataLayer/models/challenge';
 import { AdminHelper } from "../helpers/adminHelper";
+import  _ from "underscore"
 
 const router : express.Router = express.Router()
 
+router.put("/challenge/adminupdatechallenge",(req,res,next) =>{
+  AdminHelper.updateEntity("Challenge",req.body,res,next)
+})
 
 router.get("/challenge/admingetchallenges", async (req,res,next : NextFunction) =>{
   await AdminHelper.getEntity("Challenge", req.query.field,req.query.value, req.query.skip,  req.query.limit,  ["__v"], res,next)
@@ -26,7 +29,6 @@ router.post("/challenge/challengeCompleted", async (req : any, res : any) =>{
             else{
               res.send(null)
             }
-
         if(err){
           console.log(err)
         }
@@ -38,8 +40,9 @@ router.post("/challenge/challengeCompleted", async (req : any, res : any) =>{
   }
 })
 
-router.post('/challenge/createChallenge', async (req : any, res : any) => {
+router.post('/challenge/createchallenge', async (req : any, res : any, next : NextFunction) => {
     try{
+      console.log(req.body)
       const challenge : IChallenge = new DB.Models.Challenge({
         challengeName: req.body.challengeName,
         gameName : req.body.gameName,
@@ -47,21 +50,27 @@ router.post('/challenge/createChallenge', async (req : any, res : any) => {
         active : req.body.active
       })
          try{
-          let _challenge = await  challenge.save()
-          console.log(_challenge)
-          DB.Models.Game.updateOne({name : _challenge.gameName}, {$push : {challenges : _challenge._id}},(err : any,game : any) =>{
-            console.log(game)
-          })
-          res.send("done")
-           
-        
+          let _challenge = await challenge.save()
+          DB.Models.Game.updateOne({name : _challenge.gameName}, {$push : {challenges : _challenge._id}},async (err : any,game : any) =>{
+              if(game.n != 1){
+                DB.Models.Challenge.findByIdAndDelete(_challenge._id)
+                const error = new Error(`Game by the name: ${_challenge.gameName} does not exist` )
+                res.status(404)
+                next(error)
+              }else{
+                res.send(_.omit(_challenge.toJSON(),"__v"))
+              }
+          })   
         }catch(e)
         {
-          console.log(e)
-          res.status(401).send("challenge already exists")
+          const error = new Error("challenge already exists or the game does not exist")
+          res.status(401)
+          next(error)
         }    
     } catch(e){
-      res.status(500).send(e);
+      const error = new Error("Internal Server Error")
+      res.status(500)
+      next(error)
     }
 });
 
