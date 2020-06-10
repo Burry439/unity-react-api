@@ -1,0 +1,1 @@
+{"config":{"buttonText":"Create game","spinner":true},"fields":[{"label":"name","placeholder":"Enter the Name of the game","required":true}]}

@@ -22,7 +22,7 @@ router.post('/form/createform', (req,res,next) =>{
 
 router.get('/form/getform', async (req,res,next) =>{
     let deserializedData : any;
-         fs.readFile(`${__dirname}/../reactForms/${req.query.formName}.json`, async (err, data : any) => {
+         fs.readFile(`${process.env.ROOT_FOLDER}/../reactForms/${req.query.formName}.json`, async (err, data : any) => {
             if (err){
                 const error = new Error(`Cannot find form with name ${req.query.formName}` )
                 res.status(404)
