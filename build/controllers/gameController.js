@@ -53,7 +53,7 @@ router.get("/game/admingetgames", function (req, res, next) { return __awaiter(v
         }
     });
 }); });
-router.get("/game/adminupdategame", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.put("/game/adminupdategame", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         adminHelper_1.AdminHelper.updateEntity("Game", req.body, res, next);
         return [2 /*return*/];

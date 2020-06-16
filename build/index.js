@@ -18,7 +18,7 @@ var ExpressServer = /** @class */ (function () {
         /* set the body parser */
         this.app.use(body_parser_1.default.json({ 'limit': '50mb' }));
         this.app.use(body_parser_1.default.urlencoded({ 'extended': true, 'limit': '50mb' }));
-        this.app.use(cors_1.default({ 'origin': '*', 'methods': ['*', 'DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST'], 'allowedHeaders': ['*', 'authorization', 'content-type'] }));
+        this.app.use(cors_1.default({ 'origin': '*', 'methods': ['*', 'DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST'], 'allowedHeaders': ['*', 'authorization', 'content-type', 'Content-Language', 'Expires', 'Last-Modified', 'Pragma'] }));
         this.app.use(this.router);
         this.app.use('/', baseController_1.default);
         this.app.use("/", express_1.default.static("build/frontend"));

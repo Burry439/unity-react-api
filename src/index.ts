@@ -1,5 +1,4 @@
 import express, { Request, Response, NextFunction } from 'express'
-import mongoose from 'mongoose'
 import path from "path"
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
@@ -20,20 +19,13 @@ class ExpressServer {
       /* set the body parser */
       this.app.use ( bodyParser.json ( { 'limit' : '50mb' } ) )
       this.app.use ( bodyParser.urlencoded ( { 'extended' : true , 'limit' : '50mb' } ) )
-    
-      this.app.use ( cors ( { 'origin' : '*' , 'methods' : [ '*' , 'DELETE' , 'GET' , 'OPTIONS' , 'PATCH' , 'POST' ] , 'allowedHeaders' : [ '*' , 'authorization' , 'content-type' ] } ) )
-    
+      this.app.use ( cors ( { 'origin' : '*' , 'methods' : [ '*' , 'DELETE' , 'GET' , 'OPTIONS' , 'PATCH' , 'POST' ] , 'allowedHeaders' : [ '*' , 'authorization' , 'content-type', 'Content-Language', 'Expires', 'Last-Modified', 'Pragma'] } ) )
       this.app.use(this.router)
-    
       this.app.use ( '/' , controllers )
-     
       this.app.use ("/", express.static ("build/frontend") )
-    
-
       this.app.use((err : Error,req : Request,res :Response,next : NextFunction) =>{
         res.send(err.toString())
       })
-
 
       this.app.get('/*', function(req, res) {
           //come up with better soulution
@@ -43,6 +35,8 @@ class ExpressServer {
             }
           })
         })
+
+  
 
       this.server   = http.createServer ( this.app )
       this.server.listen ( process.env.PORT || 8080 )

@@ -17,7 +17,7 @@ router.get("/game/admingetgames", async (req,res, next : NextFunction) =>{
   await AdminHelper.getEntity("Game", req.query.field,req.query.value, req.query.skip,  req.query.limit,  ["challenges","__v"], res , next)
 })
 
-router.get("/game/adminupdategame", async (req,res, next : NextFunction) =>{
+router.put("/game/adminupdategame", async (req,res, next : NextFunction) =>{
   AdminHelper.updateEntity("Game",req.body,res,next)
 })
 
@@ -32,7 +32,6 @@ router.get("/game/getGame", async (req,res) =>{
   }catch(e){
     res.send(e)
   }
-
 })
 
 router.post('/game/createGame', async (req : any, res : any,next) => {

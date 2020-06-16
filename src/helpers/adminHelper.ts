@@ -2,19 +2,20 @@ import { DB } from "../dataLayer/DB"
 import { Response, NextFunction } from "express";
 import { Types } from "mongoose";
 
-
-
 export class AdminHelper{
     public static async getEntity(entityType : string, field : string, value : string, skip : string, limit : string, exclude : string[], res : Response,next : NextFunction){
         let filter : any = {}
        //having problem using regex with id this is a quik fix
        if(field && value) {
-        console.log(value.length)
         if(field == "_id" && value.length == 24){
           filter[field] = Types.ObjectId(value)
-        }else if(field != "_id") {
+        }
+        else if(parseInt(value)) {
+          filter[field] = value
+        }
+        else {
           filter[field] = {"$regex" : value,"$options": "i"}
-        }            
+        }
       }
         try{
             await DB.AdminModels[entityType].find(filter, {}, { skip: parseInt(skip), limit: parseInt(limit)}, async (err : Error,entities : any) =>{
@@ -46,7 +47,6 @@ export class AdminHelper{
             })
           })
         }catch(err){
-
           res.status(500)
           const error = new Error("ADMIN ERROR: something went wrong in try catch")
           return next(error)
@@ -60,7 +60,6 @@ export class AdminHelper{
             const error = new Error(`something went wrong`)
             res.status(500)
             next(error)
-         
           }
           else if(!entity){
             const error = new Error(`whoops cant find that ${entityType}`)

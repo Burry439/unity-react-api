@@ -1,5 +1,3 @@
-//import generalHelpers from "./generalHelpers"
-
 import generalHelpers from './generalHelpers'
 
 const queryStringHelpers = {
