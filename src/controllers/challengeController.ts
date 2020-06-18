@@ -7,6 +7,7 @@ import  _ from "underscore"
 const router : express.Router = express.Router()
 
 router.put("/challenge/adminupdatechallenge",(req,res,next) =>{
+  console.log(req.headers.language)
   AdminHelper.updateEntity("Challenge",req.body,res,next)
 })
 

@@ -86,14 +86,18 @@ var authenticateToken = function (req, res, next) {
 };
 // 
 router.post('/user/login', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, error, accessToken, respone, error, e_1, error;
+    var language, user, errorMessage, error, accessToken, respone, error, e_1, error;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, DB_1.DB.Models.User.findOne({ username: req.body.username }).populate("completedChallenges")];
+            case 0:
+                language = req.headers.language;
+                console.log(language);
+                return [4 /*yield*/, DB_1.DB.Models.User.findOne({ username: req.body.username }).populate("completedChallenges")];
             case 1:
                 user = _a.sent();
                 if (user === null) {
-                    error = new Error("username or password is incorrect");
+                    errorMessage = language == "en" ? "username or password is incorrect" : "הודעת שגיאה בעברית";
+                    error = new Error(errorMessage);
                     res.status(404);
                     next(error);
                 }

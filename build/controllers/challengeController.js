@@ -45,6 +45,7 @@ var adminHelper_1 = require("../helpers/adminHelper");
 var underscore_1 = __importDefault(require("underscore"));
 var router = express_1.default.Router();
 router.put("/challenge/adminupdatechallenge", function (req, res, next) {
+    console.log(req.headers.language);
     adminHelper_1.AdminHelper.updateEntity("Challenge", req.body, res, next);
 });
 router.get("/challenge/admingetchallenges", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {

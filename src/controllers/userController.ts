@@ -49,9 +49,12 @@ const authenticateToken = (req : any,res :any,next : Function) =>{
 
 // 
 router.post('/user/login', async (req : any, res : any, next) => {
+  const language = req.headers.language
+  console.log(language)
   const user : any = await DB.Models.User.findOne({username : req.body.username}).populate("completedChallenges")
     if(user === null){
-      const error = new Error("username or password is incorrect")
+      let errorMessage = language == "en" ?`username or password is incorrect` : "הודעת שגיאה בעברית"
+      const error = new Error(errorMessage)
       res.status(404)
       next(error)
     }
