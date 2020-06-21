@@ -65,6 +65,7 @@ router.post("/challenge/challengeCompleted", function (req, res) { return __awai
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 return [4 /*yield*/, DB_1.DB.Models.Challenge.findOne({ challengeName: req.body.challengeName }, function (err, challenge) {
+                        console.log(challenge);
                         DB_1.DB.Models.User.findOneAndUpdate({ _id: req.body.userId, completedChallenges: { $nin: challenge._id } }, {
                             $addToSet: { completedChallenges: challenge._id },
                             $inc: { tickets: challenge.reward }

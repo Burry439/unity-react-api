@@ -18,6 +18,7 @@ router.get("/challenge/admingetchallenges", async (req,res,next : NextFunction) 
 router.post("/challenge/challengeCompleted", async (req : any, res : any) =>{
   try{
    await DB.Models.Challenge.findOne({challengeName : req.body.challengeName}, (err : any,challenge : any) =>{
+     console.log(challenge)
        DB.Models.User.findOneAndUpdate({_id: req.body.userId, completedChallenges: {$nin: challenge._id }},
           {
             $addToSet : {completedChallenges : challenge._id},
