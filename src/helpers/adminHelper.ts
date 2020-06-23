@@ -3,7 +3,7 @@ import { Response, NextFunction } from "express";
 import { Types } from "mongoose";
 
 export class AdminHelper{
-    public static async getEntity(entityType : string, field : string, value : string, skip : string, limit : string, exclude : string[], res : Response,next : NextFunction){
+    public static async getEntity(entityType : any, field : any, value : any, skip : any, limit : any, exclude : any[], res : Response,next : NextFunction){
         let filter : any = {}
        //having problem using regex with id this is a quik fix
        if(field && value) {
