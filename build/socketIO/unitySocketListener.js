@@ -57,22 +57,19 @@ var UnitySocketListener = /** @class */ (function () {
             this.gameInstance.addUnitySocketToGameConnection(_roomData, this.socket);
             this.socket.join(this.roomData.gameName + "/" + this.roomData.userId);
             this.socket.on("challengeCompleted", function (challengeData) { return __awaiter(_this, void 0, void 0, function () {
-                var challlenge;
+                var _this = this;
                 return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, challengeBl_1.default.challengeComplete(challengeData)];
-                        case 1:
-                            challlenge = _a.sent();
-                            console.log(challlenge);
-                            if (challlenge) {
-                                //send to react
-                                this.socket.to(this.roomData.gameName + "/" + this.roomData.userId).emit("challengeCompleted", challlenge);
-                            }
-                            else {
-                                console.log("challenge already completed");
-                            }
-                            return [2 /*return*/];
-                    }
+                    challengeBl_1.default.challengeComplete(challengeData).then(function (challenge) {
+                        console.log(challenge);
+                        if (challenge) {
+                            //send to react
+                            _this.socket.to(_this.roomData.gameName + "/" + _this.roomData.userId).emit("challengeCompleted", challenge);
+                        }
+                        else {
+                            console.log("challenge already completed");
+                        }
+                    });
+                    return [2 /*return*/];
                 });
             }); });
         }
