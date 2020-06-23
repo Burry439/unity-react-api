@@ -5,7 +5,7 @@ import dotenv from 'dotenv'
 import http, { Server } from 'http'
 import cors from 'cors'
 import controllers from "./controllers/baseController";
-import SocketInstance from "./socketIo/socketInstance";
+import SocketInstance from "./socketIO/socketInstance";
 
 dotenv.config()
 
