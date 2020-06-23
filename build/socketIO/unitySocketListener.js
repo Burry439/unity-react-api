@@ -57,12 +57,10 @@ var UnitySocketListener = /** @class */ (function () {
             this.gameInstance.addUnitySocketToGameConnection(_roomData, this.socket);
             this.socket.join(this.roomData.gameName + "/" + this.roomData.userId);
             this.socket.on("challengeCompleted", function (challengeData) { return __awaiter(_this, void 0, void 0, function () {
-                var challlenge, e_1;
+                var challlenge;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0:
-                            _a.trys.push([0, 2, , 3]);
-                            return [4 /*yield*/, challengeBl_1.default.challengeComplete(challengeData)];
+                        case 0: return [4 /*yield*/, challengeBl_1.default.challengeComplete(challengeData)];
                         case 1:
                             challlenge = _a.sent();
                             console.log(challlenge);
@@ -73,12 +71,7 @@ var UnitySocketListener = /** @class */ (function () {
                             else {
                                 console.log("challenge already completed");
                             }
-                            return [3 /*break*/, 3];
-                        case 2:
-                            e_1 = _a.sent();
-                            console.log(e_1);
-                            return [3 /*break*/, 3];
-                        case 3: return [2 /*return*/];
+                            return [2 /*return*/];
                     }
                 });
             }); });
