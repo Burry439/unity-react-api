@@ -31,14 +31,14 @@ class ExpressServer {
         res.send(err.toString())
       })
 
-      this.app.get('/*', function(req, res) {
-          //come up with better soulutions
-          res.sendFile(path.join("build/frontend/index.html"),{ root: process.env.ROOT_FOLDER }, function(err) {
-            if (err) {
-              res.status(500).send(err)
-            }
-          })
-        })
+      // this.app.get('/*', function(req, res) {
+      //     //come up with better soulutions
+      //     res.sendFile(path.join("build/frontend/index.html"),{ root: process.env.ROOT_FOLDER }, function(err) {
+      //       if (err) {
+      //         res.status(500).send(err)
+      //       }
+      //     })
+      //   })
   
       this.server   = http.createServer ( this.app )
       this.server.listen ( process.env.PORT || 8080 )

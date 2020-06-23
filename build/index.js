@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
-var path_1 = __importDefault(require("path"));
 var body_parser_1 = __importDefault(require("body-parser"));
 var dotenv_1 = __importDefault(require("dotenv"));
 var http_1 = __importDefault(require("http"));
@@ -27,14 +26,14 @@ var ExpressServer = /** @class */ (function () {
         this.app.use(function (err, req, res, next) {
             res.send(err.toString());
         });
-        this.app.get('/*', function (req, res) {
-            //come up with better soulutions
-            res.sendFile(path_1.default.join("build/frontend/index.html"), { root: process.env.ROOT_FOLDER }, function (err) {
-                if (err) {
-                    res.status(500).send(err);
-                }
-            });
-        });
+        // this.app.get('/*', function(req, res) {
+        //     //come up with better soulutions
+        //     res.sendFile(path.join("build/frontend/index.html"),{ root: process.env.ROOT_FOLDER }, function(err) {
+        //       if (err) {
+        //         res.status(500).send(err)
+        //       }
+        //     })
+        //   })
         this.server = http_1.default.createServer(this.app);
         this.server.listen(process.env.PORT || 8080);
         this.socketInstance = socketInstance_1.default.getSocketInstance(this.server);
