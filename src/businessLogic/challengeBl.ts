@@ -15,13 +15,13 @@ export default class ChallengeBl {
                    {
                      $addToSet : {completedChallenges : challenge._id},
                      $inc : {tickets: challenge.reward}
-                   }, {new:true},(err : any,user : any) =>{
+                   }, {new:true},async (err : any,user : any) =>{
                     if(err){
                         return err
                     }     
                     console.log("user: ", user)
                      if(user){
-                      return challenge
+                      return await challenge
                      } 
                      else{
                        return null

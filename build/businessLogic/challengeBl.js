@@ -50,6 +50,7 @@ var ChallengeBl = /** @class */ (function () {
                         _a.trys.push([0, 2, , 3]);
                         console.log("challengeData: ", challengeData);
                         return [4 /*yield*/, DB_1.DB.Models.Challenge.findOne({ challengeName: challengeData.challengeName }, function (err, challenge) { return __awaiter(_this, void 0, void 0, function () {
+                                var _this = this;
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
                                         case 0:
@@ -57,18 +58,21 @@ var ChallengeBl = /** @class */ (function () {
                                             return [4 /*yield*/, DB_1.DB.Models.User.findOneAndUpdate({ _id: challengeData.userId, completedChallenges: { $nin: challenge._id } }, {
                                                     $addToSet: { completedChallenges: challenge._id },
                                                     $inc: { tickets: challenge.reward }
-                                                }, { new: true }, function (err, user) {
-                                                    if (err) {
-                                                        return err;
-                                                    }
-                                                    console.log("user: ", user);
-                                                    if (user) {
-                                                        return challenge;
-                                                    }
-                                                    else {
-                                                        return null;
-                                                    }
-                                                })];
+                                                }, { new: true }, function (err, user) { return __awaiter(_this, void 0, void 0, function () {
+                                                    return __generator(this, function (_a) {
+                                                        switch (_a.label) {
+                                                            case 0:
+                                                                if (err) {
+                                                                    return [2 /*return*/, err];
+                                                                }
+                                                                console.log("user: ", user);
+                                                                if (!user) return [3 /*break*/, 2];
+                                                                return [4 /*yield*/, challenge];
+                                                            case 1: return [2 /*return*/, _a.sent()];
+                                                            case 2: return [2 /*return*/, null];
+                                                        }
+                                                    });
+                                                }); })];
                                         case 1:
                                             _a.sent();
                                             return [2 /*return*/];
