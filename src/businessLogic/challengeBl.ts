@@ -14,24 +14,17 @@ export default class ChallengeBl {
     public static async challengeComplete(challengeData : ChallengeData) : Promise<IChallenge> {
         try{
           console.log("challengeData: ", challengeData)
-            return await DB.Models.Challenge.findOne({challengeName : challengeData.challengeName},  (err : any,challenge : IChallenge) =>{
-                 DB.Models.User.findOneAndUpdate({_id: challengeData.userId, completedChallenges: {$nin: challenge._id }},
-                   {
-                     $addToSet : {completedChallenges : challenge._id},
-                     $inc : {tickets: challenge.reward}
-                   }, {new:true}, (err : Error,user : IUser) =>{
-                    if(err){
-                        return err
-                    }     
-                    console.log("user: ", user)
-                     if(user != null){
-                      return challenge
-                     } 
-                     else{
-                       return null
-                     }
-                })
-             })  
+                const challenge  = await DB.Models.Challenge.findOne({challengeName : challengeData.challengeName})  
+                const user = await DB.Models.User.findOneAndUpdate({_id: challengeData.userId, completedChallenges: {$nin: challenge._id }},{
+                  $addToSet : {completedChallenges : challenge._id},
+                  $inc : {tickets: challenge.reward}
+                }, {new:true})
+
+                console.log(user)
+                if(user != null){
+                  return challenge
+                }
+
             } catch(e){
             return e
         }

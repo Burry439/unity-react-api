@@ -42,34 +42,30 @@ var ChallengeBl = /** @class */ (function () {
     }
     ChallengeBl.challengeComplete = function (challengeData) {
         return __awaiter(this, void 0, void 0, function () {
-            var e_1;
+            var challenge, user, e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
+                        _a.trys.push([0, 3, , 4]);
                         console.log("challengeData: ", challengeData);
-                        return [4 /*yield*/, DB_1.DB.Models.Challenge.findOne({ challengeName: challengeData.challengeName }, function (err, challenge) {
-                                DB_1.DB.Models.User.findOneAndUpdate({ _id: challengeData.userId, completedChallenges: { $nin: challenge._id } }, {
-                                    $addToSet: { completedChallenges: challenge._id },
-                                    $inc: { tickets: challenge.reward }
-                                }, { new: true }, function (err, user) {
-                                    if (err) {
-                                        return err;
-                                    }
-                                    console.log("user: ", user);
-                                    if (user != null) {
-                                        return challenge;
-                                    }
-                                    else {
-                                        return null;
-                                    }
-                                });
-                            })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                        return [4 /*yield*/, DB_1.DB.Models.Challenge.findOne({ challengeName: challengeData.challengeName })];
+                    case 1:
+                        challenge = _a.sent();
+                        return [4 /*yield*/, DB_1.DB.Models.User.findOneAndUpdate({ _id: challengeData.userId, completedChallenges: { $nin: challenge._id } }, {
+                                $addToSet: { completedChallenges: challenge._id },
+                                $inc: { tickets: challenge.reward }
+                            }, { new: true })];
                     case 2:
+                        user = _a.sent();
+                        console.log(user);
+                        if (user != null) {
+                            return [2 /*return*/, challenge];
+                        }
+                        return [3 /*break*/, 4];
+                    case 3:
                         e_1 = _a.sent();
                         return [2 /*return*/, e_1];
-                    case 3: return [2 /*return*/];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
