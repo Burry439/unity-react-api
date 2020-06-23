@@ -8,6 +8,7 @@ import ChallengeData from "../interfaces/challengeData";
 export default class ChallengeBl {
     public static async challengeComplete(challengeData : ChallengeData) {
         try{
+          console.log("challengeData: ", challengeData)
             await DB.Models.Challenge.findOne({challengeName : challengeData.challengeName}, (err : any,challenge : any) =>{
               console.log(challenge)
                 DB.Models.User.findOneAndUpdate({_id: challengeData.userId, completedChallenges: {$nin: challenge._id }},
@@ -18,6 +19,7 @@ export default class ChallengeBl {
                     if(err){
                         return err
                     }     
+                    console.log("user: ", user)
                      if(user){
                       return challenge
                      } 

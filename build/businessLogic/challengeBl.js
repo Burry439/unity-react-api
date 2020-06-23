@@ -47,6 +47,7 @@ var ChallengeBl = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
+                        console.log("challengeData: ", challengeData);
                         return [4 /*yield*/, DB_1.DB.Models.Challenge.findOne({ challengeName: challengeData.challengeName }, function (err, challenge) {
                                 console.log(challenge);
                                 DB_1.DB.Models.User.findOneAndUpdate({ _id: challengeData.userId, completedChallenges: { $nin: challenge._id } }, {
@@ -56,6 +57,7 @@ var ChallengeBl = /** @class */ (function () {
                                     if (err) {
                                         return err;
                                     }
+                                    console.log("user: ", user);
                                     if (user) {
                                         return challenge;
                                     }
