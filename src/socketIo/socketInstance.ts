@@ -12,6 +12,7 @@ export default class SocketInstance {
     public gameInstance : Game =  Game.getGameInstance();
     public userId : string;
     constructor(server : Server) {
+        console.log("here")
         this.io = socketIo(server)
         this.io.on("connection", (socket : SocketIO.Socket) =>{
             console.log("connection")

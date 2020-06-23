@@ -10,6 +10,7 @@ var dotenv_1 = __importDefault(require("dotenv"));
 var http_1 = __importDefault(require("http"));
 var cors_1 = __importDefault(require("cors"));
 var baseController_1 = __importDefault(require("./controllers/baseController"));
+var socketInstance_1 = __importDefault(require("./socketIo/socketInstance"));
 dotenv_1.default.config();
 var ExpressServer = /** @class */ (function () {
     function ExpressServer() {
@@ -36,7 +37,7 @@ var ExpressServer = /** @class */ (function () {
         });
         this.server = http_1.default.createServer(this.app);
         this.server.listen(process.env.PORT || 8080);
-        //this.socketInstance = SocketInstance.getSocketInstance(this.server)
+        this.socketInstance = socketInstance_1.default.getSocketInstance(this.server);
         console.log('=====================================');
         console.log('SERVER SETTINGS:');
         console.log("Server running at - localhost:" + process.env.PORT);

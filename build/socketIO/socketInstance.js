@@ -47,6 +47,7 @@ var SocketInstance = /** @class */ (function () {
     function SocketInstance(server) {
         var _this = this;
         this.gameInstance = game_1.default.getGameInstance();
+        console.log("here");
         this.io = socket_io_1.default(server);
         this.io.on("connection", function (socket) {
             console.log("connection");
