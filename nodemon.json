@@ -1,10 +1,10 @@
 {
   "type": "node",
   "request": "launch",
-  "remoteRoot": "${workspaceRoot}/api/buildd/",
+  "remoteRoot": "${workspaceRoot}/api/build/",
   "name": "Lanuch full nodemon",
   "runtimeExecutable": "nodemon",
-  "program": "${workspaceFolder}/apii/index.ts",
+  "program": "${workspaceFolder}/api/index.ts",
   "restart": true,
   "sourceMaps": true,
   "console": "internalConsole",
