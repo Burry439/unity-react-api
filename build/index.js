@@ -10,7 +10,7 @@ var dotenv_1 = __importDefault(require("dotenv"));
 var http_1 = __importDefault(require("http"));
 var cors_1 = __importDefault(require("cors"));
 var baseController_1 = __importDefault(require("./controllers/baseController"));
-var socketInstance_1 = __importDefault(require("./socketIo/socketInstance"));
+var socketInstance_1 = __importDefault(require("./socketIO/socketInstance"));
 dotenv_1.default.config();
 var ExpressServer = /** @class */ (function () {
     function ExpressServer() {
