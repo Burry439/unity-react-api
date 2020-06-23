@@ -23,10 +23,11 @@ export default class UnitySocketListener {
     
             this.socket.on("challengeCompleted", async (challengeData : ChallengeData) =>{
                 try{
-                    const res = await ChallengeBl.challengeComplete(challengeData)
-                    if(res.data){
+                    const challlenge = await ChallengeBl.challengeComplete(challengeData)
+                    console.log(challlenge)
+                    if(challlenge){
                         //send to react
-                        this.socket.to(this.roomData.gameName + "/" + this.roomData.userId).emit("challengeCompleted", res.data)
+                        this.socket.to(this.roomData.gameName + "/" + this.roomData.userId).emit("challengeCompleted", challlenge)
                     }else{
                         console.log("challenge already completed")
                     }
