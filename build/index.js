@@ -10,9 +10,9 @@ var dotenv_1 = __importDefault(require("dotenv"));
 var http_1 = __importDefault(require("http"));
 var cors_1 = __importDefault(require("cors"));
 var baseController_1 = __importDefault(require("./controllers/baseController"));
-var socketInstance_1 = __importDefault(require("./socketIo/socketInstance"));
 dotenv_1.default.config();
 var ExpressServer = /** @class */ (function () {
+    //public socketInstance : SocketInstance;
     function ExpressServer() {
         this.app = express_1.default();
         this.router = express_1.default.Router();
@@ -27,9 +27,6 @@ var ExpressServer = /** @class */ (function () {
         this.app.use(function (err, req, res, next) {
             res.send(err.toString());
         });
-        this.server = http_1.default.createServer(this.app);
-        this.server.listen(process.env.PORT || 8080);
-        this.socketInstance = socketInstance_1.default.getSocketInstance(this.server);
         this.app.get('/*', function (req, res) {
             //come up with better soulutions
             res.sendFile(path_1.default.join("build/frontend/index.html"), { root: process.env.ROOT_FOLDER }, function (err) {
@@ -38,6 +35,9 @@ var ExpressServer = /** @class */ (function () {
                 }
             });
         });
+        this.server = http_1.default.createServer(this.app);
+        this.server.listen(process.env.PORT || 8080);
+        //this.socketInstance = SocketInstance.getSocketInstance(this.server)
         console.log('=====================================');
         console.log('SERVER SETTINGS:');
         console.log("Server running at - localhost:" + process.env.PORT);
