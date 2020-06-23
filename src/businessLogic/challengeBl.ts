@@ -5,25 +5,26 @@ import { DB } from "../dataLayer/DB";
 import { Request, Response } from "express";
 import ChallengeData from "../interfaces/challengeData";
 import { IChallenge } from "../dataLayer/models/challenge";
+import { IUser } from "../dataLayer/models/user";
 
 export default class ChallengeBl {
 
   private static ChallengeBlInstance : ChallengeBl;
 
-    public async challengeComplete(challengeData : ChallengeData) : Promise<IChallenge> {
+    public static async challengeComplete(challengeData : ChallengeData) : Promise<IChallenge> {
         try{
           console.log("challengeData: ", challengeData)
-            return await DB.Models.Challenge.findOne({challengeName : challengeData.challengeName},  (err : any,challenge : any) =>{
+            return await DB.Models.Challenge.findOne({challengeName : challengeData.challengeName},  (err : any,challenge : IChallenge) =>{
                  DB.Models.User.findOneAndUpdate({_id: challengeData.userId, completedChallenges: {$nin: challenge._id }},
                    {
                      $addToSet : {completedChallenges : challenge._id},
                      $inc : {tickets: challenge.reward}
-                   }, {new:true}, (err : any,user : any) =>{
+                   }, {new:true}, (err : Error,user : IUser) =>{
                     if(err){
                         return err
                     }     
                     console.log("user: ", user)
-                     if(user){
+                     if(user != null){
                       return challenge
                      } 
                      else{
@@ -35,14 +36,6 @@ export default class ChallengeBl {
             return e
         }
     }
-
-    public static getChallengeBlInstance(): ChallengeBl  {
-      if(!ChallengeBl.ChallengeBlInstance){
-        ChallengeBl.ChallengeBlInstance = new ChallengeBl()
-      }
-      return  ChallengeBl.ChallengeBlInstance
-  }
-
 }
 
       

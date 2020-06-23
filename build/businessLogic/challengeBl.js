@@ -40,7 +40,7 @@ var DB_1 = require("../dataLayer/DB");
 var ChallengeBl = /** @class */ (function () {
     function ChallengeBl() {
     }
-    ChallengeBl.prototype.challengeComplete = function (challengeData) {
+    ChallengeBl.challengeComplete = function (challengeData) {
         return __awaiter(this, void 0, void 0, function () {
             var e_1;
             return __generator(this, function (_a) {
@@ -57,7 +57,7 @@ var ChallengeBl = /** @class */ (function () {
                                         return err;
                                     }
                                     console.log("user: ", user);
-                                    if (user) {
+                                    if (user != null) {
                                         return challenge;
                                     }
                                     else {
@@ -73,12 +73,6 @@ var ChallengeBl = /** @class */ (function () {
                 }
             });
         });
-    };
-    ChallengeBl.getChallengeBlInstance = function () {
-        if (!ChallengeBl.ChallengeBlInstance) {
-            ChallengeBl.ChallengeBlInstance = new ChallengeBl();
-        }
-        return ChallengeBl.ChallengeBlInstance;
     };
     return ChallengeBl;
 }());

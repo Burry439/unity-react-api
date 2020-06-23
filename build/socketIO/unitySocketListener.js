@@ -46,7 +46,6 @@ var UnitySocketListener = /** @class */ (function () {
         var _this = this;
         this.socket = _socket;
         this.gameInstance = game_1.default.getGameInstance();
-        this.challengeBl = challengeBl_1.default.getChallengeBlInstance();
         this.roomData = _roomData;
         //if thee are no avalible react clients
         if (!_roomData.userId) {
@@ -61,7 +60,7 @@ var UnitySocketListener = /** @class */ (function () {
                 var challenge;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.challengeBl.challengeComplete(challengeData)];
+                        case 0: return [4 /*yield*/, challengeBl_1.default.challengeComplete(challengeData)];
                         case 1:
                             challenge = _a.sent();
                             console.log("challenge: ", challenge);

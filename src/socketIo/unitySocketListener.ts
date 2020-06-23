@@ -7,11 +7,9 @@ export default class UnitySocketListener {
     socket : SocketIO.Socket
     roomData : RoomData
     gameInstance : Game
-    challengeBl : ChallengeBl
     constructor(_socket : SocketIO.Socket, _roomData : RoomData){
         this.socket = _socket
         this.gameInstance = Game.getGameInstance()
-        this.challengeBl = ChallengeBl.getChallengeBlInstance()
         this.roomData = _roomData;
         
         //if thee are no avalible react clients
@@ -24,7 +22,7 @@ export default class UnitySocketListener {
             this.socket.join(this.roomData.gameName + "/" + this.roomData.userId)
     
             this.socket.on("challengeCompleted", async (challengeData : ChallengeData) =>{
-                const challenge = await this.challengeBl.challengeComplete(challengeData)
+                const challenge = await ChallengeBl.challengeComplete(challengeData)
                 console.log("challenge: ", challenge)
                 if(challenge){
                     //send to react
