@@ -1,10 +1,47 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var game_1 = __importDefault(require("./SocketClasses/game"));
 var socket_io_1 = __importDefault(require("socket.io"));
+var game_1 = __importDefault(require("./game"));
+var reactSocketListener_1 = __importDefault(require("./reactSocketListener"));
 var unitySocketListener_1 = __importDefault(require("./unitySocketListener"));
 var SocketInstance = /** @class */ (function () {
     function SocketInstance(server) {
@@ -13,55 +50,16 @@ var SocketInstance = /** @class */ (function () {
         this.io = socket_io_1.default(server);
         this.io.on("connection", function (socket) {
             console.log("connection");
-            var thisPlayerId = "0";
-            _this.unitySocketListener = new unitySocketListener_1.default(socket, _this.gameInstance);
-            socket.on("reactClientConnected", function () {
-                console.log("react connected");
+            socket.on("ReactConnected", function (roomData) {
+                new reactSocketListener_1.default(socket, roomData);
             });
-            //when someone connects from react send a new player to unity
-            socket.on("addReactUser", function (user) {
-                console.log("addReactUser");
-                //has this user been added already
-                thisPlayerId = user.id;
-                // if this user is not a duplicate create a new player and inform everyone 
-                if (!_this.gameInstance.isDuplicatePlayer(user.id)) {
-                    var newPlayer = _this.gameInstance.addNewPlayerFromReact(user.username, user.id);
-                    //tell me react client about all other users
-                    socket.emit("reactFirstSpawn", { allPLayers: _this.gameInstance.getPlayers(), thisPlayerId: user.id });
-                    //tell all unity and react clients about the new user
-                    socket.broadcast.emit("reactSpawn", newPlayer);
-                }
-                else {
-                    //if its a duplicate add one to its instance count 
-                    _this.gameInstance.addToInstanceCount(user.id);
-                    socket.emit("duplicatePlayer", user.id);
-                }
-            });
-            //when someone signs out from react 
-            socket.on("reactUserSignedOut", function (userId) {
-                var player = _this.gameInstance.getThisPlayer(userId);
-                _this.gameInstance.removePlayerAfterSignOut(player.id);
-                //tell every one else on react and unity to remove me
-                socket.broadcast.emit("disconnectFromReact", player);
-                // sign him out in all tabs
-                socket.broadcast.emit("signedOutFromReact", player);
-            });
-            // if we needed to sign out from multiple tabs resest there sockets playerId
-            socket.on("resetPlayerId", function () {
-                thisPlayerId = "0";
-            });
-            // if a user closes a tab or browser or refreshes
-            socket.on("disconnect", function () {
-                console.log("in disconect", thisPlayerId);
-                // if he has a tab still open remove from his instance count
-                var disconectedPlayer = _this.gameInstance.disconnectedFromReact(thisPlayerId);
-                // if he discounected every where inform other players he discounnected
-                if (disconectedPlayer.disconnectPlayer) {
-                    //we are crashing because it is making a call to  a unity sokcet that is closed
-                    //need to make unity disconnect through plugin
-                    socket.broadcast.emit("disconnectFromReact", disconectedPlayer.player);
-                }
-            });
+            socket.on("UnityConnection", function (roomData) { return __awaiter(_this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    //const gameData = await this.getGameData(roomData.gameName)
+                    new unitySocketListener_1.default(socket, roomData);
+                    return [2 /*return*/];
+                });
+            }); });
         });
     }
     SocketInstance.getSocketInstance = function (server) {
