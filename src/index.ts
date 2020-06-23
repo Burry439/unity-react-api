@@ -5,7 +5,7 @@ import dotenv from 'dotenv'
 import http, { Server } from 'http'
 import cors from 'cors'
 import controllers from "./controllers/baseController";
-import SocketInstance from "./socketIo/socketInstance";
+//import SocketInstance from "./socketIo/socketInstance";
 
 dotenv.config()
 
@@ -13,7 +13,7 @@ class ExpressServer {
     private app: express.Application;
     private router : express.Router;
     private server : Server;
-    public socketInstance : SocketInstance;
+    //public socketInstance : SocketInstance;
     constructor(){
 
       this.app  = express () 
@@ -42,7 +42,7 @@ class ExpressServer {
   
       this.server   = http.createServer ( this.app )
       this.server.listen ( process.env.PORT || 8080 )
-      this.socketInstance = SocketInstance.getSocketInstance(this.server)
+     // this.socketInstance = SocketInstance.getSocketInstance(this.server)
       console.log ( '=====================================' )
       console.log ( 'SERVER SETTINGS:' )
       console.log ( `Server running at - localhost:${ process.env.PORT }` )
