@@ -9,9 +9,9 @@ export default class ChallengeBl {
     public static async challengeComplete(challengeData : ChallengeData) {
         try{
           console.log("challengeData: ", challengeData)
-            await DB.Models.Challenge.findOne({challengeName : challengeData.challengeName}, (err : any,challenge : any) =>{
+            await DB.Models.Challenge.findOne({challengeName : challengeData.challengeName}, async (err : any,challenge : any) =>{
               console.log(challenge)
-                DB.Models.User.findOneAndUpdate({_id: challengeData.userId, completedChallenges: {$nin: challenge._id }},
+                await DB.Models.User.findOneAndUpdate({_id: challengeData.userId, completedChallenges: {$nin: challenge._id }},
                    {
                      $addToSet : {completedChallenges : challenge._id},
                      $inc : {tickets: challenge.reward}
