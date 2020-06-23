@@ -12,19 +12,18 @@ export default class ChallengeBl {
     public async challengeComplete(challengeData : ChallengeData) {
         try{
           console.log("challengeData: ", challengeData)
-            await DB.Models.Challenge.findOne({challengeName : challengeData.challengeName}, async (err : any,challenge : any) =>{
-              console.log(challenge)
-                await DB.Models.User.findOneAndUpdate({_id: challengeData.userId, completedChallenges: {$nin: challenge._id }},
+            await DB.Models.Challenge.findOne({challengeName : challengeData.challengeName},  (err : any,challenge : any) =>{
+                 DB.Models.User.findOneAndUpdate({_id: challengeData.userId, completedChallenges: {$nin: challenge._id }},
                    {
                      $addToSet : {completedChallenges : challenge._id},
                      $inc : {tickets: challenge.reward}
-                   }, {new:true},async (err : any,user : any) =>{
+                   }, {new:true}, (err : any,user : any) =>{
                     if(err){
                         return err
                     }     
                     console.log("user: ", user)
                      if(user){
-                      return await challenge
+                      return challenge
                      } 
                      else{
                        return null
