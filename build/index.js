@@ -27,7 +27,11 @@ var ExpressServer = /** @class */ (function () {
         this.app.use(function (err, req, res, next) {
             res.send(err.toString());
         });
+        this.app.get("/game/*", function (req, res) {
+            res.sendFile(path_1.default.join("build/errorPage/error.html"), { root: process.env.ROOT_FOLDER });
+        });
         this.app.get('/*', function (req, res) {
+            console.log("in *");
             //come up with better soulutions
             res.sendFile(path_1.default.join("build/frontend/index.html"), { root: process.env.ROOT_FOLDER }, function (err) {
                 if (err) {

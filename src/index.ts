@@ -31,7 +31,12 @@ class ExpressServer {
         res.send(err.toString())
       })
 
+      this.app.get("/game/*",(req,res) =>{
+        res.sendFile(path.join("build/errorPage/error.html"),{ root: process.env.ROOT_FOLDER })
+      })
+    
       this.app.get('/*', function(req, res) {
+        console.log("in *")
           //come up with better soulutions
           res.sendFile(path.join("build/frontend/index.html"),{ root: process.env.ROOT_FOLDER }, function(err) {
             if (err) {
