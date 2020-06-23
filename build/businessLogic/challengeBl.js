@@ -65,9 +65,7 @@ var ChallengeBl = /** @class */ (function () {
                                     }
                                 });
                             })];
-                    case 1:
-                        _a.sent();
-                        return [3 /*break*/, 3];
+                    case 1: return [2 /*return*/, _a.sent()];
                     case 2:
                         e_1 = _a.sent();
                         return [2 /*return*/, e_1];

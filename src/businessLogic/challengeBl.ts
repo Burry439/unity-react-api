@@ -4,15 +4,16 @@ import RoomData from "../interfaces/roomData";
 import { DB } from "../dataLayer/DB";
 import { Request, Response } from "express";
 import ChallengeData from "../interfaces/challengeData";
+import { IChallenge } from "../dataLayer/models/challenge";
 
 export default class ChallengeBl {
 
   private static ChallengeBlInstance : ChallengeBl;
 
-    public async challengeComplete(challengeData : ChallengeData) {
+    public async challengeComplete(challengeData : ChallengeData) : Promise<IChallenge> {
         try{
           console.log("challengeData: ", challengeData)
-            await DB.Models.Challenge.findOne({challengeName : challengeData.challengeName},  (err : any,challenge : any) =>{
+            return await DB.Models.Challenge.findOne({challengeName : challengeData.challengeName},  (err : any,challenge : any) =>{
                  DB.Models.User.findOneAndUpdate({_id: challengeData.userId, completedChallenges: {$nin: challenge._id }},
                    {
                      $addToSet : {completedChallenges : challenge._id},
