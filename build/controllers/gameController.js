@@ -63,7 +63,7 @@ router.get("/game/getGame", function (req, res) { return __awaiter(void 0, void 
     return __generator(this, function (_a) {
         console.log(req.query);
         try {
-            DB_1.DB.Models.Game.findOne({ name: req.query.gameName }, function (err, game) {
+            DB_1.DB.Models.Game.findOne({ name: req.query.name }, function (err, game) {
                 console.log(game);
                 if (err)
                     res.send(err);

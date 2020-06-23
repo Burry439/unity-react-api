@@ -7,7 +7,7 @@ var arrayUniquePlugin = require('mongoose-unique-array');
 var Game = /** @class */ (function () {
     function Game() {
         var schema = new mongoose_1.Schema({
-            gameName: { type: String, required: true, unique: true },
+            name: { type: String, required: true, unique: true },
             challenges: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "Challenge" }],
         });
         schema.plugin(arrayUniquePlugin);
