@@ -39,7 +39,7 @@ var ExpressServer = /** @class */ (function () {
         this.server.listen(process.env.PORT || 8080);
         this.socketInstance = socketInstance_1.default.getSocketInstance(this.server);
         console.log(this.socketInstance);
-        console.log('======================================');
+        console.log('=====================================');
         console.log('SERVER SETTINGS:');
         console.log("Server running at - localhost:" + process.env.PORT);
         console.log("DB - " + process.env.MONGODB_URI);
