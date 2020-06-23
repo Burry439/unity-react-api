@@ -43,7 +43,7 @@ class ExpressServer {
       this.server   = http.createServer ( this.app )
       this.server.listen ( process.env.PORT || 8080 )
       this.socketInstance = SocketInstance.getSocketInstance(this.server)
-      console.log ( '=====================================' )
+      console.log ( '====================================' )
       console.log ( 'SERVER SETTINGS:' )
       console.log ( `Server running at - localhost:${ process.env.PORT }` )
       console.log ( `DB - ${ process.env.MONGODB_URI }` )
