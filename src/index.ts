@@ -13,7 +13,7 @@ class ExpressServer {
     private app: express.Application;
     private router : express.Router;
     private server : Server;
-    //public socketInstance : SocketInstance;
+    public socketInstance : SocketInstance;
     constructor(){
 
       this.app  = express () 

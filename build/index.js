@@ -12,7 +12,6 @@ var cors_1 = __importDefault(require("cors"));
 var baseController_1 = __importDefault(require("./controllers/baseController"));
 dotenv_1.default.config();
 var ExpressServer = /** @class */ (function () {
-    //public socketInstance : SocketInstance;
     function ExpressServer() {
         this.app = express_1.default();
         this.router = express_1.default.Router();
