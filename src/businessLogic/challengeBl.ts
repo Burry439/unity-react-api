@@ -6,7 +6,10 @@ import { Request, Response } from "express";
 import ChallengeData from "../interfaces/challengeData";
 
 export default class ChallengeBl {
-    public static async challengeComplete(challengeData : ChallengeData) {
+
+  private static ChallengeBlInstance : ChallengeBl;
+
+    public async challengeComplete(challengeData : ChallengeData) {
         try{
           console.log("challengeData: ", challengeData)
             await DB.Models.Challenge.findOne({challengeName : challengeData.challengeName}, async (err : any,challenge : any) =>{
@@ -32,6 +35,13 @@ export default class ChallengeBl {
             return e
         }
     }
+
+    public static getChallengeBlInstance(): ChallengeBl  {
+      if(!ChallengeBl.ChallengeBlInstance){
+        ChallengeBl.ChallengeBlInstance = new ChallengeBl()
+      }
+      return  ChallengeBl.ChallengeBlInstance
+  }
 
 }
 

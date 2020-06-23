@@ -40,7 +40,7 @@ var DB_1 = require("../dataLayer/DB");
 var ChallengeBl = /** @class */ (function () {
     function ChallengeBl() {
     }
-    ChallengeBl.challengeComplete = function (challengeData) {
+    ChallengeBl.prototype.challengeComplete = function (challengeData) {
         return __awaiter(this, void 0, void 0, function () {
             var e_1;
             var _this = this;
@@ -89,6 +89,12 @@ var ChallengeBl = /** @class */ (function () {
                 }
             });
         });
+    };
+    ChallengeBl.getChallengeBlInstance = function () {
+        if (!ChallengeBl.ChallengeBlInstance) {
+            ChallengeBl.ChallengeBlInstance = new ChallengeBl();
+        }
+        return ChallengeBl.ChallengeBlInstance;
     };
     return ChallengeBl;
 }());

@@ -46,6 +46,7 @@ var UnitySocketListener = /** @class */ (function () {
         var _this = this;
         this.socket = _socket;
         this.gameInstance = game_1.default.getGameInstance();
+        this.challengeBl = challengeBl_1.default.getChallengeBlInstance();
         this.roomData = _roomData;
         //if thee are no avalible react clients
         if (!_roomData.userId) {
@@ -57,19 +58,22 @@ var UnitySocketListener = /** @class */ (function () {
             this.gameInstance.addUnitySocketToGameConnection(_roomData, this.socket);
             this.socket.join(this.roomData.gameName + "/" + this.roomData.userId);
             this.socket.on("challengeCompleted", function (challengeData) { return __awaiter(_this, void 0, void 0, function () {
-                var _this = this;
+                var challenge;
                 return __generator(this, function (_a) {
-                    challengeBl_1.default.challengeComplete(challengeData).then(function (challenge) {
-                        console.log(challenge);
-                        if (challenge) {
-                            //send to react
-                            _this.socket.to(_this.roomData.gameName + "/" + _this.roomData.userId).emit("challengeCompleted", challenge);
-                        }
-                        else {
-                            console.log("challenge already completed");
-                        }
-                    });
-                    return [2 /*return*/];
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this.challengeBl.challengeComplete(challengeData)];
+                        case 1:
+                            challenge = _a.sent();
+                            console.log("challenge: ", challenge);
+                            if (challenge) {
+                                //send to react
+                                this.socket.to(this.roomData.gameName + "/" + this.roomData.userId).emit("challengeCompleted", challenge);
+                            }
+                            else {
+                                console.log("challenge already completed");
+                            }
+                            return [2 /*return*/];
+                    }
                 });
             }); });
         }
