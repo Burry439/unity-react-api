@@ -1,13 +1,5 @@
-import queryStringHelper from '../helpers/queryStringHelpers';
 import express, { NextFunction } from "express"
-import bcrypt from "bcryptjs"
 import { DB } from "../dataLayer/DB"
-import {IUser, User} from "../dataLayer/models/user"
-import jwt, { JsonWebTokenError } from "jsonwebtoken"
-import { Session } from 'inspector';
-import LoginSignUpRespone from '../dataLayer/interfaces/LoginSignUpRespone';
-import { Challenge, IChallenge } from '../dataLayer/models/challenge';
-import { Schema } from 'mongoose';
 import { IGame } from '../dataLayer/models/game';
 import { AdminHelper } from '../helpers/adminHelper';
 
@@ -22,13 +14,13 @@ router.put("/game/adminupdategame", async (req,res, next : NextFunction) =>{
 })
 
 router.get("/game/getGame", async (req,res) =>{
-  console.log(req.query)
+  console.log("in get game")
     try{
-      DB.Models.Game.findOne({name : req.query.name}, (err : any,game : any) =>{
+      DB.Models.Game.findOne({gameName : req.query.gameName}, (err : any,game : any) =>{
         console.log(game)
         if(err) res.send(err)
         res.send(game)
-     })
+     }).populate("challenges")
   }catch(e){
     res.send(e)
   }
@@ -38,7 +30,7 @@ router.post('/game/createGame', async (req : any, res : any,next) => {
   console.log(req.body)
     try{
       const game : IGame = new DB.Models.Game({
-        name: req.body.name,
+        gameName: req.body.gameName,
         challenges :[],
       })
           await game.save((err,game) =>{   

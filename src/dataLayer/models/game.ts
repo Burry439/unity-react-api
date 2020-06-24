@@ -2,7 +2,7 @@ import{ Schema, model, Document, Model } from 'mongoose'
 const arrayUniquePlugin = require('mongoose-unique-array');
 
 export interface IGame extends Document {
-  name : string,
+  gameName : string,
   challenges : Schema.Types.ObjectId[]
 }
 
@@ -13,7 +13,7 @@ export class Game {
 
     constructor() {
         const schema =  new Schema({
-          name: { type: String, required: true,unique: true},
+          gameName: { type: String, required: true,unique: true},
           challenges : [{type : Schema.Types.ObjectId, ref : "Challenge"}],
            
         });

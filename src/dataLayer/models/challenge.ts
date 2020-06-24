@@ -3,7 +3,6 @@ import{ Schema, model, Document, Model } from 'mongoose'
 export interface IChallenge extends Document {
   challengeName: string
   gameName : string
-  completed : boolean
   reward : number
   active : boolean
 }

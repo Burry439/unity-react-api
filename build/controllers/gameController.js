@@ -61,14 +61,14 @@ router.put("/game/adminupdategame", function (req, res, next) { return __awaiter
 }); });
 router.get("/game/getGame", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        console.log(req.query);
+        console.log("in get game");
         try {
-            DB_1.DB.Models.Game.findOne({ name: req.query.name }, function (err, game) {
+            DB_1.DB.Models.Game.findOne({ gameName: req.query.gameName }, function (err, game) {
                 console.log(game);
                 if (err)
                     res.send(err);
                 res.send(game);
-            });
+            }).populate("challenges");
         }
         catch (e) {
             res.send(e);
@@ -86,7 +86,7 @@ router.post('/game/createGame', function (req, res, next) { return __awaiter(voi
             case 1:
                 _a.trys.push([1, 3, , 4]);
                 game = new DB_1.DB.Models.Game({
-                    name: req.body.name,
+                    gameName: req.body.gameName,
                     challenges: [],
                 });
                 return [4 /*yield*/, game.save(function (err, game) {

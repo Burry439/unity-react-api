@@ -17,9 +17,9 @@ router.get("/challenge/admingetchallenges", async (req,res,next : NextFunction) 
 
 router.post("/challenge/challengeCompleted", async (req : any, res : any) =>{
   try{
-   await DB.Models.Challenge.findOne({challengeName : req.body.challengeName}, (err : any,challenge : any) =>{
-     console.log(challenge)
-       DB.Models.User.findOneAndUpdate({_id: req.body.userId, completedChallenges: {$nin: challenge._id }},
+       const userId = req.body.userId
+       const challenge = req.body.challenge
+       await DB.Models.User.findOneAndUpdate({_id: userId, completedChallenges: {$nin: challenge._id }},
           {
             $addToSet : {completedChallenges : challenge._id},
             $inc : {tickets: challenge.reward}
@@ -34,9 +34,7 @@ router.post("/challenge/challengeCompleted", async (req : any, res : any) =>{
         if(err){
           console.log(err)
         }
-       })
-    })
-    
+       })    
   } catch(e){
     res.send(e)
   }
@@ -53,7 +51,7 @@ router.post('/challenge/createchallenge', async (req : any, res : any, next : Ne
       })
          try{
           let _challenge = await challenge.save()
-          DB.Models.Game.updateOne({name : _challenge.gameName}, {$push : {challenges : _challenge._id}},async (err : any,game : any) =>{
+          DB.Models.Game.updateOne({gameName : _challenge.gameName}, {$push : {challenges : _challenge._id}},async (err : any,game : any) =>{
               if(game.n != 1){
                 DB.Models.Challenge.findByIdAndDelete(_challenge._id)
                 const error = new Error(`Game by the name: ${_challenge.gameName} does not exist` )
