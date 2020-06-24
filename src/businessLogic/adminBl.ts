@@ -2,7 +2,7 @@ import { DB } from "../dataLayer/DB"
 import { Response, NextFunction } from "express";
 import { Types } from "mongoose";
 
-export class AdminHelper{
+export default class AdminBl{
     public static async getEntity(entityType : string, field : string, value : any, skip : any, limit : any, exclude : any[], res : Response,next : NextFunction){
         let filter : any = {}
        //having problem using regex with id this is a quik fix

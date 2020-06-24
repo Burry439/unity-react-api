@@ -41,24 +41,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var DB_1 = require("../dataLayer/DB");
-var adminHelper_1 = require("../helpers/adminHelper");
-var underscore_1 = __importDefault(require("underscore"));
+var adminBl_1 = __importDefault(require("../businessLogic/adminBl"));
+var challengeBl_1 = __importDefault(require("../businessLogic/challengeBl"));
 var router = express_1.default.Router();
 router.put("/challenge/adminupdatechallenge", function (req, res, next) {
     console.log(req.headers.language);
-    adminHelper_1.AdminHelper.updateEntity("Challenge", req.body, res, next);
+    adminBl_1.default.updateEntity("Challenge", req.body, res, next);
 });
 router.get("/challenge/admingetchallenges", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, adminHelper_1.AdminHelper.getEntity("Challenge", req.query.field, req.query.value, req.query.skip, req.query.limit, ["__v"], res, next)];
+            case 0: return [4 /*yield*/, adminBl_1.default.getEntity("Challenge", req.query.field, req.query.value, req.query.skip, req.query.limit, ["__v"], res, next)];
             case 1:
                 _a.sent();
                 return [2 /*return*/];
         }
     });
 }); });
-router.post("/challenge/challengeCompleted", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.post("/challenge/challengeCompleted", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var userId, challenge_1, e_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -93,54 +93,24 @@ router.post("/challenge/challengeCompleted", function (req, res) { return __awai
     });
 }); });
 router.post('/challenge/createchallenge', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var challenge, _challenge_1, e_2, error, e_3, error;
+    var challenge, e_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 5, , 6]);
-                console.log(req.body);
-                challenge = new DB_1.DB.Models.Challenge({
-                    challengeName: req.body.challengeName,
-                    gameName: req.body.gameName,
-                    reward: req.body.reward,
-                    active: req.body.active
-                });
-                _a.label = 1;
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, challengeBl_1.default.createChallenge(req.body)];
             case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, challenge.save()];
+                challenge = _a.sent();
+                console.log(challenge);
+                res.send(challenge);
+                return [3 /*break*/, 3];
             case 2:
-                _challenge_1 = _a.sent();
-                DB_1.DB.Models.Game.updateOne({ gameName: _challenge_1.gameName }, { $push: { challenges: _challenge_1._id } }, function (err, game) { return __awaiter(void 0, void 0, void 0, function () {
-                    var error;
-                    return __generator(this, function (_a) {
-                        if (game.n != 1) {
-                            DB_1.DB.Models.Challenge.findByIdAndDelete(_challenge_1._id);
-                            error = new Error("Game by the name: " + _challenge_1.gameName + " does not exist");
-                            res.status(404);
-                            next(error);
-                        }
-                        else {
-                            res.send(underscore_1.default.omit(_challenge_1.toJSON(), "__v"));
-                        }
-                        return [2 /*return*/];
-                    });
-                }); });
-                return [3 /*break*/, 4];
-            case 3:
                 e_2 = _a.sent();
-                error = new Error("challenge already exists or the game does not exist");
-                res.status(401);
-                next(error);
-                return [3 /*break*/, 4];
-            case 4: return [3 /*break*/, 6];
-            case 5:
-                e_3 = _a.sent();
-                error = new Error("Internal Server Error");
+                console.log("in error");
                 res.status(500);
-                next(error);
-                return [3 /*break*/, 6];
-            case 6: return [2 /*return*/];
+                next(e_2);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); });

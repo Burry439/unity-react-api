@@ -1,33 +1,32 @@
 
-import { gameConnection } from "../interfaces/gameConnection";
-import RoomData from "../interfaces/roomData";
+
 import { DB } from "../dataLayer/DB";
-import { Request, Response } from "express";
-import ChallengeData from "../interfaces/challengeData";
 import { IChallenge } from "../dataLayer/models/challenge";
-import { IUser } from "../dataLayer/models/user";
+import  _ from "underscore"
 
 export default class ChallengeBl {
 
-  private static ChallengeBlInstance : ChallengeBl;
-
-    public static async challengeComplete(challengeData : ChallengeData) : Promise<IChallenge> {
+    public static async createChallenge(challenge : IChallenge) {
+        const newChallenge : IChallenge = new DB.Models.Challenge(challenge)
+        console.log("newChallenge: " + newChallenge)
         try{
-          console.log("challengeData: ", challengeData)
-                const challenge  = await DB.Models.Challenge.findOne({challengeName : challengeData.challengeName})  
-                const user = await DB.Models.User.findOneAndUpdate({_id: challengeData.userId, completedChallenges: {$nin: challenge._id }},{
-                  $addToSet : {completedChallenges : challenge._id},
-                  $inc : {tickets: challenge.reward}
-                }, {new:true})
-
-                console.log(user)
-                if(user != null){
-                  return challenge
-                }
-
-            } catch(e){
-            return e
+            await newChallenge.save()  
+        }catch(e){
+            throw new Error("Looks like challenge already exists")
         }
+        try{
+            const game = await DB.Models.Game.updateOne({gameName : newChallenge.gameName}, {$push : {challenges : newChallenge._id}}) 
+            if(game.n != 1){
+           
+            await DB.Models.Challenge.findByIdAndDelete(newChallenge._id)
+            throw new Error ("Looks like that game doesnt exists")
+            } else{
+            return newChallenge
+            }     
+        }catch(e)
+        {
+            throw new Error(e)
+        }    
     }
 }
 

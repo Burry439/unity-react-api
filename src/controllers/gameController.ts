@@ -1,16 +1,16 @@
 import express, { NextFunction } from "express"
 import { DB } from "../dataLayer/DB"
 import { IGame } from '../dataLayer/models/game';
-import { AdminHelper } from '../helpers/adminHelper';
+import  AdminBl  from '../businessLogic/adminBl';
 
 const router : express.Router = express.Router()
 
 router.get("/game/admingetgames", async (req,res, next : NextFunction) =>{
-  await AdminHelper.getEntity("Game", req.query.field,req.query.value, req.query.skip,  req.query.limit,  ["challenges","__v"], res , next)
+  await AdminBl.getEntity("Game", req.query.field,req.query.value, req.query.skip,  req.query.limit,  ["challenges","__v"], res , next)
 })
 
 router.put("/game/adminupdategame", async (req,res, next : NextFunction) =>{
-  AdminHelper.updateEntity("Game",req.body,res,next)
+  AdminBl.updateEntity("Game",req.body,res,next)
 })
 
 router.get("/game/getGame", async (req,res) =>{

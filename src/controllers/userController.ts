@@ -1,14 +1,10 @@
-import queryStringHelper from '../helpers/queryStringHelpers';
 import express, { NextFunction } from "express"
 import bcrypt from "bcryptjs"
 import { DB } from "../dataLayer/DB"
 import {IUser, User} from "../dataLayer/models/user"
-import jwt, { JsonWebTokenError } from "jsonwebtoken"
-import { Session } from 'inspector';
-import LoginSignUpRespone from '../dataLayer/interfaces/LoginSignUpRespone';
-import { Challenge } from '../dataLayer/models/challenge';
-import mongoose , { Schema } from 'mongoose';
-import { AdminHelper } from '../helpers/adminHelper';
+import jwt from "jsonwebtoken"
+import LoginSignUpRespone from '../interfaces/LoginSignUpRespone';
+import  AdminBl  from '../businessLogic/adminBl';
 import  _ from "underscore"
 
 const router : express.Router = express.Router()
@@ -27,11 +23,11 @@ const generateAccessToken = (user : any) =>{
   return jwt.sign(user.toJSON(),process.env.ACCESS_TOKEN_SECRET, {expiresIn: "15s"})
 }
 router.put("/user/adminupdateuser",(req,res,next) =>{
-  AdminHelper.updateEntity("User",req.body,res,next)
+  AdminBl.updateEntity("User",req.body,res,next)
 })
 
 router.get("/user/admingetusers", async (req,res, next : NextFunction) =>{
-    await AdminHelper.getEntity("User", req.query.field, req.query.value, req.query.skip,  req.query.limit,  ["completedChallenges","__v", "password"], res,next)
+    await AdminBl.getEntity("User", req.query.field, req.query.value, req.query.skip,  req.query.limit,  ["completedChallenges","__v", "password"], res,next)
 })
 
 

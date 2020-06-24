@@ -40,32 +40,40 @@ var DB_1 = require("../dataLayer/DB");
 var ChallengeBl = /** @class */ (function () {
     function ChallengeBl() {
     }
-    ChallengeBl.challengeComplete = function (challengeData) {
+    ChallengeBl.createChallenge = function (challenge) {
         return __awaiter(this, void 0, void 0, function () {
-            var challenge, user, e_1;
+            var newChallenge, e_1, game, e_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
-                        console.log("challengeData: ", challengeData);
-                        return [4 /*yield*/, DB_1.DB.Models.Challenge.findOne({ challengeName: challengeData.challengeName })];
+                        newChallenge = new DB_1.DB.Models.Challenge(challenge);
+                        console.log("newChallenge: " + newChallenge);
+                        _a.label = 1;
                     case 1:
-                        challenge = _a.sent();
-                        return [4 /*yield*/, DB_1.DB.Models.User.findOneAndUpdate({ _id: challengeData.userId, completedChallenges: { $nin: challenge._id } }, {
-                                $addToSet: { completedChallenges: challenge._id },
-                                $inc: { tickets: challenge.reward }
-                            }, { new: true })];
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, newChallenge.save()];
                     case 2:
-                        user = _a.sent();
-                        console.log(user);
-                        if (user != null) {
-                            return [2 /*return*/, challenge];
-                        }
+                        _a.sent();
                         return [3 /*break*/, 4];
                     case 3:
                         e_1 = _a.sent();
-                        return [2 /*return*/, e_1];
-                    case 4: return [2 /*return*/];
+                        throw new Error("Looks like challenge already exists");
+                    case 4:
+                        _a.trys.push([4, 9, , 10]);
+                        return [4 /*yield*/, DB_1.DB.Models.Game.updateOne({ gameName: newChallenge.gameName }, { $push: { challenges: newChallenge._id } })];
+                    case 5:
+                        game = _a.sent();
+                        if (!(game.n != 1)) return [3 /*break*/, 7];
+                        return [4 /*yield*/, DB_1.DB.Models.Challenge.findByIdAndDelete(newChallenge._id)];
+                    case 6:
+                        _a.sent();
+                        throw new Error("Looks like that game doesnt exists");
+                    case 7: return [2 /*return*/, newChallenge];
+                    case 8: return [3 /*break*/, 10];
+                    case 9:
+                        e_2 = _a.sent();
+                        throw new Error(e_2);
+                    case 10: return [2 /*return*/];
                 }
             });
         });

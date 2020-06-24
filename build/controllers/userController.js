@@ -43,7 +43,7 @@ var express_1 = __importDefault(require("express"));
 var bcryptjs_1 = __importDefault(require("bcryptjs"));
 var DB_1 = require("../dataLayer/DB");
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-var adminHelper_1 = require("../helpers/adminHelper");
+var adminBl_1 = __importDefault(require("../businessLogic/adminBl"));
 var underscore_1 = __importDefault(require("underscore"));
 var router = express_1.default.Router();
 var posts = [
@@ -60,12 +60,12 @@ var generateAccessToken = function (user) {
     return jsonwebtoken_1.default.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15s" });
 };
 router.put("/user/adminupdateuser", function (req, res, next) {
-    adminHelper_1.AdminHelper.updateEntity("User", req.body, res, next);
+    adminBl_1.default.updateEntity("User", req.body, res, next);
 });
 router.get("/user/admingetusers", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, adminHelper_1.AdminHelper.getEntity("User", req.query.field, req.query.value, req.query.skip, req.query.limit, ["completedChallenges", "__v", "password"], res, next)];
+            case 0: return [4 /*yield*/, adminBl_1.default.getEntity("User", req.query.field, req.query.value, req.query.skip, req.query.limit, ["completedChallenges", "__v", "password"], res, next)];
             case 1:
                 _a.sent();
                 return [2 /*return*/];

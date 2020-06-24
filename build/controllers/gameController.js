@@ -41,12 +41,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var DB_1 = require("../dataLayer/DB");
-var adminHelper_1 = require("../helpers/adminHelper");
+var adminBl_1 = __importDefault(require("../businessLogic/adminBl"));
 var router = express_1.default.Router();
 router.get("/game/admingetgames", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, adminHelper_1.AdminHelper.getEntity("Game", req.query.field, req.query.value, req.query.skip, req.query.limit, ["challenges", "__v"], res, next)];
+            case 0: return [4 /*yield*/, adminBl_1.default.getEntity("Game", req.query.field, req.query.value, req.query.skip, req.query.limit, ["challenges", "__v"], res, next)];
             case 1:
                 _a.sent();
                 return [2 /*return*/];
@@ -55,7 +55,7 @@ router.get("/game/admingetgames", function (req, res, next) { return __awaiter(v
 }); });
 router.put("/game/adminupdategame", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        adminHelper_1.AdminHelper.updateEntity("Game", req.body, res, next);
+        adminBl_1.default.updateEntity("Game", req.body, res, next);
         return [2 /*return*/];
     });
 }); });

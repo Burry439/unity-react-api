@@ -1,4 +1,4 @@
-import { IUser } from "../models/user";
+import { IUser } from "../dataLayer/models/user";
 
 export default interface LoginSignUpRespone {
     user: IUser;
