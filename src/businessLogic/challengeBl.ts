@@ -2,6 +2,9 @@
 
 import { DB } from "../dataLayer/DB";
 import { IChallenge } from "../dataLayer/models/challenge";
+import { Query, QueryUpdateOptions } from "mongoose";
+import { IGame } from "../dataLayer/models/game";
+import { IUser } from "../dataLayer/models/user";
 
 export default class ChallengeBl {
 
@@ -13,7 +16,7 @@ export default class ChallengeBl {
             throw new Error("Looks like challenge already exists")
         }
         try{
-            const game = await DB.Models.Game.updateOne({gameName : newChallenge.gameName}, {$push : {challenges : newChallenge._id}}) 
+            const game : QueryUpdateOptions = await DB.Models.Game.updateOne({gameName : newChallenge.gameName}, {$push : {challenges : newChallenge._id}}) 
             if(game.n != 1){    
                 await DB.Models.Challenge.findByIdAndDelete(newChallenge._id)
                 throw new Error ("Looks like that game doesnt exists")
@@ -29,11 +32,7 @@ export default class ChallengeBl {
 
     public static async challengeCompleted(userId : string, challenge : IChallenge) {
         try{
-            const user = await DB.Models.User.findOneAndUpdate({_id: userId, completedChallenges: {$nin: challenge._id }},
-                {
-                 $addToSet : {completedChallenges : challenge._id},
-                 $inc : {tickets: challenge.reward}
-                }, {new:true})    
+            const user : IUser = await DB.Models.User.findOneAndUpdate({_id: userId, completedChallenges: {$nin: challenge._id }},{ $addToSet : {completedChallenges : challenge._id}, $inc : {tickets: challenge.reward}},{new:true})    
             if(!user){
                 throw new Error("challenge already completed")
             }  
@@ -42,7 +41,6 @@ export default class ChallengeBl {
             throw e
        }
     }
-
 }
 
       

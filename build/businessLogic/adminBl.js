@@ -41,15 +41,15 @@ var mongoose_1 = require("mongoose");
 var AdminBl = /** @class */ (function () {
     function AdminBl() {
     }
-    AdminBl.getEntity = function (entityType, field, value, skip, limit, exclude, res, next) {
+    AdminBl.getEntity = function (entityType, field, value, skip, limit, exclude) {
         return __awaiter(this, void 0, void 0, function () {
-            var filter, err_1, error;
-            var _this = this;
+            var filter, entities, totalCount, headerFields_1, headers, e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        entityType = capitalize(entityType);
                         filter = {};
-                        //having problem using regex with id this is a quik fix
+                        //having problem using regex with id this is a quick fix
                         if (field && value) {
                             if (field == "_id" && value.length == 24) {
                                 filter[field] = mongoose_1.Types.ObjectId(value);
@@ -63,89 +63,62 @@ var AdminBl = /** @class */ (function () {
                         }
                         _a.label = 1;
                     case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, DB_1.DB.AdminModels[entityType].find(filter, {}, { skip: parseInt(skip), limit: parseInt(limit) }, function (err, entities) { return __awaiter(_this, void 0, void 0, function () {
-                                var error, totalCount;
-                                return __generator(this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0:
-                                            if (err) {
-                                                error = new Error("ADMIN ERROR: something went wrong in DB.AdminModels[entityType].find");
-                                                res.status(500);
-                                                return [2 /*return*/, next(error)];
-                                            }
-                                            return [4 /*yield*/, DB_1.DB.AdminModels[entityType].countDocuments(filter, function (err, count) {
-                                                    if (err) {
-                                                        res.status(500);
-                                                        var error = new Error("ADMIN ERROR: DB.AdminModels[entityType].countDocuments");
-                                                        return next(error);
-                                                    }
-                                                    totalCount = count;
-                                                    // if we found something send it to client
-                                                    if (totalCount > 0 && entities.length) {
-                                                        res.status(200).send({ entities: entities, totalCount: totalCount, exclude: exclude });
-                                                        // if we do not find something send just the fields to client
-                                                    }
-                                                    else {
-                                                        var headerFields_1 = {};
-                                                        Object.keys(DB_1.DB.AdminModels[entityType].schema.paths).forEach(function (field) {
-                                                            headerFields_1[field] = field;
-                                                        });
-                                                        var headers = [headerFields_1];
-                                                        res.status(200).send({ headers: headers, totalCount: totalCount, exclude: exclude });
-                                                    }
-                                                })];
-                                        case 1:
-                                            _a.sent();
-                                            return [2 /*return*/];
-                                    }
-                                });
-                            }); })];
+                        _a.trys.push([1, 4, , 5]);
+                        return [4 /*yield*/, DB_1.DB.AdminModels[entityType].find(filter, {}, { skip: parseInt(skip), limit: parseInt(limit) })];
                     case 2:
-                        _a.sent();
-                        return [3 /*break*/, 4];
+                        entities = _a.sent();
+                        return [4 /*yield*/, DB_1.DB.AdminModels[entityType].countDocuments(filter)];
                     case 3:
-                        err_1 = _a.sent();
-                        res.status(500);
-                        error = new Error("ADMIN ERROR: something went wrong in try catch");
-                        return [2 /*return*/, next(error)];
-                    case 4: return [2 /*return*/];
+                        totalCount = _a.sent();
+                        if (totalCount > 0 && entities.length) {
+                            return [2 /*return*/, { entities: entities, totalCount: totalCount, exclude: exclude }];
+                        }
+                        else {
+                            headerFields_1 = {};
+                            Object.keys(DB_1.DB.AdminModels[entityType].schema.paths).forEach(function (field) {
+                                headerFields_1[field] = field;
+                            });
+                            headers = [headerFields_1];
+                            return [2 /*return*/, { headers: headers, totalCount: totalCount, exclude: exclude }];
+                        }
+                        return [3 /*break*/, 5];
+                    case 4:
+                        e_1 = _a.sent();
+                        throw e_1;
+                    case 5: return [2 /*return*/];
                 }
             });
         });
     };
-    AdminBl.updateEntity = function (entityType, entity, res, next) {
+    AdminBl.updateEntity = function (entityType, entity) {
         return __awaiter(this, void 0, void 0, function () {
-            var error;
+            var updatedEntity, e_2;
             return __generator(this, function (_a) {
-                try {
-                    DB_1.DB.AdminModels[entityType].findByIdAndUpdate(entity._id, { $set: entity }, { new: true }, function (err, entity) {
-                        if (err) {
-                            var error = new Error("something went wrong");
-                            res.status(500);
-                            next(error);
+                switch (_a.label) {
+                    case 0:
+                        entityType = capitalize(entityType);
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, DB_1.DB.AdminModels[entityType].findByIdAndUpdate(entity._id, { $set: entity }, { new: true })];
+                    case 2:
+                        updatedEntity = _a.sent();
+                        if (!updatedEntity) {
+                            throw new Error("whoops cant find that " + entityType);
                         }
-                        else if (!entity) {
-                            var error = new Error("whoops cant find that " + entityType);
-                            res.status(404);
-                            next(error);
-                        }
-                        else {
-                            console.log("updated " + entityType + ": " + entity);
-                            res.send(entity);
-                        }
-                    });
+                        return [2 /*return*/, updatedEntity];
+                    case 3:
+                        e_2 = _a.sent();
+                        throw e_2;
+                    case 4: return [2 /*return*/];
                 }
-                catch (_b) {
-                    error = new Error("something went wrong");
-                    res.status(500);
-                    next(error);
-                }
-                return [2 /*return*/];
             });
         });
     };
     return AdminBl;
 }());
 exports.default = AdminBl;
+var capitalize = function (str) {
+    return str.charAt(0).toUpperCase() == str ? str : str.charAt(0).toUpperCase() + str.slice(1);
+};
 //# sourceMappingURL=adminBl.js.map

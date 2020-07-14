@@ -84,10 +84,7 @@ var ChallengeBl = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, DB_1.DB.Models.User.findOneAndUpdate({ _id: userId, completedChallenges: { $nin: challenge._id } }, {
-                                $addToSet: { completedChallenges: challenge._id },
-                                $inc: { tickets: challenge.reward }
-                            }, { new: true })];
+                        return [4 /*yield*/, DB_1.DB.Models.User.findOneAndUpdate({ _id: userId, completedChallenges: { $nin: challenge._id } }, { $addToSet: { completedChallenges: challenge._id }, $inc: { tickets: challenge.reward } }, { new: true })];
                     case 1:
                         user = _a.sent();
                         if (!user) {

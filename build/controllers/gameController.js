@@ -40,76 +40,45 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
-var DB_1 = require("../dataLayer/DB");
-var adminBl_1 = __importDefault(require("../businessLogic/adminBl"));
+var gameBl_1 = __importDefault(require("../businessLogic/gameBl"));
 var router = express_1.default.Router();
-router.get("/game/admingetgames", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, adminBl_1.default.getEntity("Game", req.query.field, req.query.value, req.query.skip, req.query.limit, ["challenges", "__v"], res, next)];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); });
-router.put("/game/adminupdategame", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        adminBl_1.default.updateEntity("Game", req.body, res, next);
-        return [2 /*return*/];
-    });
-}); });
-router.get("/game/getGame", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        console.log("in get game: " + req.query.gameName);
-        req.query.gameName;
-        try {
-            DB_1.DB.Models.Game.findOne({ gameName: req.query.gameName }, function (err, game) {
-                console.log(game);
-                if (err)
-                    res.send(err);
-                res.send(game);
-            }).populate("challenges");
-        }
-        catch (e) {
-            res.send(e);
-        }
-        return [2 /*return*/];
-    });
-}); });
-router.post('/game/createGame', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var game, e_1, error;
+router.get("/game/getGame", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var game, e_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log(req.body);
-                _a.label = 1;
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, gameBl_1.default.getGame(req.query.gameName)];
             case 1:
-                _a.trys.push([1, 3, , 4]);
-                game = new DB_1.DB.Models.Game({
-                    gameName: req.body.gameName,
-                    challenges: [],
-                });
-                return [4 /*yield*/, game.save(function (err, game) {
-                        if (err) {
-                            var error = new Error("Looks like this game already exists");
-                            res.status(500);
-                            next(error);
-                        }
-                        else {
-                            res.send(game);
-                        }
-                    })];
+                game = _a.sent();
+                res.send(game);
+                return [3 /*break*/, 3];
             case 2:
-                _a.sent();
-                return [3 /*break*/, 4];
-            case 3:
                 e_1 = _a.sent();
-                error = new Error("Internal server error");
+                res.status(404);
+                next(e_1);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
+router.post('/game/createGame', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var game, e_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, gameBl_1.default.createGame(req.body.gameName)];
+            case 1:
+                game = _a.sent();
+                res.send(game);
+                return [3 /*break*/, 3];
+            case 2:
+                e_2 = _a.sent();
                 res.status(500);
-                next(error);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                next(e_2);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); });

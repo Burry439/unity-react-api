@@ -40,18 +40,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
-var challengeBl_1 = __importDefault(require("../businessLogic/challengeBl"));
+var adminBl_1 = __importDefault(require("../businessLogic/adminBl"));
 var router = express_1.default.Router();
-router.post("/challenge/challengeCompleted", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var challenge, e_1;
+router.get("/admin/get", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var respone, e_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, challengeBl_1.default.challengeCompleted(req.body.userId, req.body.challenge)];
+                return [4 /*yield*/, adminBl_1.default.getEntity(req.query.entityType, req.query.field, req.query.value, req.query.skip, req.query.limit, req.query.exclude)];
             case 1:
-                challenge = _a.sent();
-                res.send(challenge);
+                respone = _a.sent();
+                res.send(respone);
                 return [3 /*break*/, 3];
             case 2:
                 e_1 = _a.sent();
@@ -62,16 +62,16 @@ router.post("/challenge/challengeCompleted", function (req, res, next) { return 
         }
     });
 }); });
-router.post('/challenge/createchallenge', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var challenge, e_2;
+router.put("/admin/update", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, e_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, challengeBl_1.default.createChallenge(req.body)];
+                return [4 /*yield*/, adminBl_1.default.updateEntity(req.query.entityType, req.body)];
             case 1:
-                challenge = _a.sent();
-                res.send(challenge);
+                response = _a.sent();
+                res.send(response);
                 return [3 /*break*/, 3];
             case 2:
                 e_2 = _a.sent();
@@ -83,4 +83,4 @@ router.post('/challenge/createchallenge', function (req, res, next) { return __a
     });
 }); });
 exports.default = router;
-//# sourceMappingURL=challengeController.js.map
+//# sourceMappingURL=adminController.js.map
