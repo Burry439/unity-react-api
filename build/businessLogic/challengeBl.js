@@ -47,7 +47,6 @@ var ChallengeBl = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         newChallenge = new DB_1.DB.Models.Challenge(challenge);
-                        console.log("newChallenge: " + newChallenge);
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
@@ -72,8 +71,33 @@ var ChallengeBl = /** @class */ (function () {
                     case 8: return [3 /*break*/, 10];
                     case 9:
                         e_2 = _a.sent();
-                        throw new Error(e_2);
+                        throw e_2;
                     case 10: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ChallengeBl.challengeCompleted = function (userId, challenge) {
+        return __awaiter(this, void 0, void 0, function () {
+            var user, e_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, DB_1.DB.Models.User.findOneAndUpdate({ _id: userId, completedChallenges: { $nin: challenge._id } }, {
+                                $addToSet: { completedChallenges: challenge._id },
+                                $inc: { tickets: challenge.reward }
+                            }, { new: true })];
+                    case 1:
+                        user = _a.sent();
+                        if (!user) {
+                            throw new Error("challenge already completed");
+                        }
+                        return [2 /*return*/, challenge];
+                    case 2:
+                        e_3 = _a.sent();
+                        throw e_3;
+                    case 3: return [2 /*return*/];
                 }
             });
         });

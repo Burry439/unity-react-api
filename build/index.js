@@ -26,7 +26,6 @@ var ExpressServer = /** @class */ (function () {
             res.send(err.toString());
         });
         this.app.get('/*', function (req, res) {
-            //come up with better soulutions
             res.sendFile(path_1.default.join("build/frontend/index.html"), { root: process.env.ROOT_FOLDER }, function (err) {
                 if (err) {
                     res.status(500).send(err);

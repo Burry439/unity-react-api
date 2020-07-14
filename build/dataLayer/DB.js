@@ -11,16 +11,10 @@ var DB = /** @class */ (function () {
             useNewUrlParser: true,
             useCreateIndex: true,
             autoIndex: true,
-            keepAlive: true,
-            poolSize: 10,
-            bufferMaxEntries: 0,
-            connectTimeoutMS: 10000,
-            socketTimeoutMS: 45000,
-            family: 4,
             useFindAndModify: false,
             useUnifiedTopology: true
         };
-        mongoose_1.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true, useFindAndModify: false, autoIndex: true });
+        mongoose_1.connect(process.env.MONGODB_URI, this.options);
         mongoose_1.connection.on('error', console.error.bind(console, 'connection error:'));
         this._db = mongoose_1.connection;
         this._db.on('open', this.connected);
@@ -29,18 +23,14 @@ var DB = /** @class */ (function () {
             User: new user_1.User().model,
             Challenge: new challenge_1.Challenge().model,
             Game: new game_1.Game().model
-            // this is where we initialise all models
         };
-        // this is used for getting info for the Admin Page
         this._adminModels = {
             User: this._models.User,
             Challenge: this._models.Challenge,
             Game: this._models.Game
-            // this is where we initialise all models
         };
     }
     Object.defineProperty(DB, "AdminModels", {
-        // i Made this for the admin helper so i can use one generic method
         get: function () {
             if (!DB.instance) {
                 DB.instance = new DB();

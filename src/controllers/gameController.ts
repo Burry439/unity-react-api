@@ -14,7 +14,8 @@ router.put("/game/adminupdategame", async (req,res, next : NextFunction) =>{
 })
 
 router.get("/game/getGame", async (req,res) =>{
-  console.log("in get game")
+  console.log("in get game: " + req.query.gameName)
+  req.query.gameName
     try{
       DB.Models.Game.findOne({gameName : req.query.gameName}, (err : any,game : any) =>{
         console.log(game)

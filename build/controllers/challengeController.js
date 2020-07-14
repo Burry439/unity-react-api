@@ -40,7 +40,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
-var DB_1 = require("../dataLayer/DB");
 var adminBl_1 = __importDefault(require("../businessLogic/adminBl"));
 var challengeBl_1 = __importDefault(require("../businessLogic/challengeBl"));
 var router = express_1.default.Router();
@@ -59,34 +58,21 @@ router.get("/challenge/admingetchallenges", function (req, res, next) { return _
     });
 }); });
 router.post("/challenge/challengeCompleted", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var userId, challenge_1, e_1;
+    var challenge, e_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                userId = req.body.userId;
-                challenge_1 = req.body.challenge;
-                return [4 /*yield*/, DB_1.DB.Models.User.findOneAndUpdate({ _id: userId, completedChallenges: { $nin: challenge_1._id } }, {
-                        $addToSet: { completedChallenges: challenge_1._id },
-                        $inc: { tickets: challenge_1.reward }
-                    }, { new: true }, function (err, user) {
-                        console.log("in update user: ", user);
-                        if (user) {
-                            res.send(challenge_1);
-                        }
-                        else {
-                            res.send(null);
-                        }
-                        if (err) {
-                            console.log(err);
-                        }
-                    })];
+                return [4 /*yield*/, challengeBl_1.default.challengeCompleted(req.body.userId, req.body.challenge)];
             case 1:
-                _a.sent();
+                challenge = _a.sent();
+                res.send(challenge);
                 return [3 /*break*/, 3];
             case 2:
                 e_1 = _a.sent();
-                res.send(e_1);
+                console.log("in error");
+                res.status(500);
+                next(e_1);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }

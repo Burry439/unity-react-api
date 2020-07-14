@@ -17,39 +17,25 @@ router.get("/challenge/admingetchallenges", async (req,res,next : NextFunction) 
 })
 
 router.post("/challenge/challengeCompleted", async (req : any, res : any,next : NextFunction) =>{    
-  try{
-       const userId = req.body.userId
-       const challenge = req.body.challenge
-       await DB.Models.User.findOneAndUpdate({_id: userId, completedChallenges: {$nin: challenge._id }},
-          {
-            $addToSet : {completedChallenges : challenge._id},
-            $inc : {tickets: challenge.reward}
-          }, {new:true},(err : any,user : any) =>{
-            console.log("in update user: ", user)
-            if(user){
-              res.send(challenge)
-            } 
-            else{
-              res.send(null)
-            }
-        if(err){
-          console.log(err)
-        }
-       })    
-  } catch(e){
-    res.send(e)
-  }
+    try{
+        const challenge : IChallenge = await ChallengeBl.challengeCompleted(req.body.userId,req.body.challenge)
+        res.send(challenge)
+    }catch(e){
+      	console.log("in error")
+      	res.status(500)
+      	next(e)
+    }
 })
 
 router.post('/challenge/createchallenge', async (req : any, res : any, next : NextFunction) => {
     try{
-    const challenge : IChallenge = await ChallengeBl.createChallenge(req.body)
-    console.log(challenge)
-    res.send(challenge)
-  }catch(e){
-    console.log("in error")
-      res.status(500)
-      next(e)
+    	const challenge : IChallenge = await ChallengeBl.createChallenge(req.body)
+    	console.log(challenge)
+    	res.send(challenge)
+  	}catch(e){
+    	console.log("in error")
+      	res.status(500)
+      	next(e)
   }
 });
 

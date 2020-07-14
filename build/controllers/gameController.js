@@ -61,7 +61,8 @@ router.put("/game/adminupdategame", function (req, res, next) { return __awaiter
 }); });
 router.get("/game/getGame", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        console.log("in get game");
+        console.log("in get game: " + req.query.gameName);
+        req.query.gameName;
         try {
             DB_1.DB.Models.Game.findOne({ gameName: req.query.gameName }, function (err, game) {
                 console.log(game);
