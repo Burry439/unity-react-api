@@ -2,11 +2,13 @@ import { connect, connection, Connection } from 'mongoose';
 import { User, UserModel } from './models/user';
 import { Game, GameModel } from './models/game';
 import { Challenge, ChallengeModel } from './models/challenge';
+import { Text, TextModel } from './models/text';
 
 declare interface IModels {
     User: UserModel ;
     Challenge : ChallengeModel;
-    Game : GameModel
+    Game : GameModel;
+    Text : TextModel
 
 }
 
@@ -36,13 +38,15 @@ export class DB {
         this._models = {
             User: new User().model,
             Challenge: new Challenge().model,
-            Game: new Game().model
+            Game: new Game().model,
+            Text: new Text().model
         }
 
         this._adminModels = {
             User: this._models.User,
             Challenge: this._models.Challenge,
-            Game:  this._models.Game
+            Game:  this._models.Game,
+            Text:  this._models.Text
         }
     }
 

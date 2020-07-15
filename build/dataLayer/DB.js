@@ -5,6 +5,7 @@ var mongoose_1 = require("mongoose");
 var user_1 = require("./models/user");
 var game_1 = require("./models/game");
 var challenge_1 = require("./models/challenge");
+var text_1 = require("./models/text");
 var DB = /** @class */ (function () {
     function DB() {
         this.options = {
@@ -22,12 +23,14 @@ var DB = /** @class */ (function () {
         this._models = {
             User: new user_1.User().model,
             Challenge: new challenge_1.Challenge().model,
-            Game: new game_1.Game().model
+            Game: new game_1.Game().model,
+            Text: new text_1.Text().model
         };
         this._adminModels = {
             User: this._models.User,
             Challenge: this._models.Challenge,
-            Game: this._models.Game
+            Game: this._models.Game,
+            Text: this._models.Text
         };
     }
     Object.defineProperty(DB, "AdminModels", {

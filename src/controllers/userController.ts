@@ -1,11 +1,10 @@
 import express, { NextFunction, Request, Response } from "express"
 import {IUser} from "../dataLayer/models/user"
-
 import LoginSignUpRespone from '../interfaces/LoginSignUpRespone';
-import  AdminBl  from '../businessLogic/adminBl';
 import  UserBl  from '../businessLogic/userBl';
 import  _ from "underscore"
 import jwt from "jsonwebtoken"
+
 const router : express.Router = express.Router()
 
 router.post('/user/login', async (req: Request, res: Response, next: NextFunction) => {

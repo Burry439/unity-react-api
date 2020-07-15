@@ -28,9 +28,9 @@ export default class AdminBl{
                 const headerFields : any = {}
                 Object.keys(DB.AdminModels[entityType].schema.paths).forEach((field : any) =>{
                     headerFields[field] = field
-                })
-                const headers = [headerFields]
-                return {headers : headers, totalCount : totalCount, exclude : exclude}
+                })                
+                const headers = headerFields
+                return {entities : headers, totalCount : totalCount, exclude : exclude}
             }
         }catch(e){
             throw e

@@ -37,88 +37,61 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var DB_1 = require("../dataLayer/DB");
-var mongoose_1 = require("mongoose");
-var AdminBl = /** @class */ (function () {
-    function AdminBl() {
+var TextBl = /** @class */ (function () {
+    function TextBl() {
     }
-    AdminBl.getEntity = function (entityType, field, value, skip, limit, exclude) {
+    TextBl.getPageText = function (language, page) {
         return __awaiter(this, void 0, void 0, function () {
-            var filter, entities, totalCount, headerFields_1, headers, e_1;
+            var pageText_1, texts, e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        entityType = capitalize(entityType);
-                        filter = {};
-                        //having problem using regex with id this is a quick fix
-                        if (field && value) {
-                            if (field == "_id" && value.length == 24) {
-                                filter[field] = mongoose_1.Types.ObjectId(value);
-                            }
-                            else if (parseInt(value)) {
-                                filter[field] = value;
-                            }
-                            else {
-                                filter[field] = { "$regex": value, "$options": "i" };
-                            }
-                        }
-                        _a.label = 1;
+                        _a.trys.push([0, 2, , 3]);
+                        pageText_1 = {};
+                        return [4 /*yield*/, DB_1.DB.Models.Text.find({ pageName: page, language: language })];
                     case 1:
-                        _a.trys.push([1, 4, , 5]);
-                        return [4 /*yield*/, DB_1.DB.AdminModels[entityType].find(filter, {}, { skip: parseInt(skip), limit: parseInt(limit) })];
+                        texts = _a.sent();
+                        texts.forEach(function (text) {
+                            pageText_1[text.key] = text.value;
+                        });
+                        return [2 /*return*/, JSON.stringify(pageText_1)];
                     case 2:
-                        entities = _a.sent();
-                        return [4 /*yield*/, DB_1.DB.AdminModels[entityType].countDocuments(filter)];
-                    case 3:
-                        totalCount = _a.sent();
-                        if (totalCount > 0 && entities.length) {
-                            return [2 /*return*/, { entities: entities, totalCount: totalCount, exclude: exclude }];
-                        }
-                        else {
-                            headerFields_1 = {};
-                            Object.keys(DB_1.DB.AdminModels[entityType].schema.paths).forEach(function (field) {
-                                headerFields_1[field] = field;
-                            });
-                            headers = headerFields_1;
-                            return [2 /*return*/, { entities: headers, totalCount: totalCount, exclude: exclude }];
-                        }
-                        return [3 /*break*/, 5];
-                    case 4:
                         e_1 = _a.sent();
-                        throw e_1;
-                    case 5: return [2 /*return*/];
+                        throw new Error("Cant find the that language");
+                    case 3: return [2 /*return*/];
                 }
             });
         });
     };
-    AdminBl.updateEntity = function (entityType, entity) {
+    TextBl.createText = function (language, pageName, key, value) {
         return __awaiter(this, void 0, void 0, function () {
-            var updatedEntity, e_2;
+            var text, e_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        entityType = capitalize(entityType);
+                        text = new DB_1.DB.Models.Text({
+                            language: language,
+                            pageName: pageName,
+                            key: key,
+                            value: value
+                        });
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, DB_1.DB.AdminModels[entityType].findByIdAndUpdate(entity._id, { $set: entity }, { new: true })];
+                        return [4 /*yield*/, text.save()];
                     case 2:
-                        updatedEntity = _a.sent();
-                        if (!updatedEntity) {
-                            throw new Error("whoops cant find that " + entityType);
-                        }
-                        return [2 /*return*/, updatedEntity];
+                        _a.sent();
+                        return [2 /*return*/, text];
                     case 3:
                         e_2 = _a.sent();
-                        throw e_2;
+                        console.log(e_2);
+                        throw new Error("whoops something went wrong while creating that text");
                     case 4: return [2 /*return*/];
                 }
             });
         });
     };
-    return AdminBl;
+    return TextBl;
 }());
-exports.default = AdminBl;
-var capitalize = function (str) {
-    return str.charAt(0).toUpperCase() == str ? str : str.charAt(0).toUpperCase() + str.slice(1);
-};
-//# sourceMappingURL=adminBl.js.map
+exports.default = TextBl;
+//# sourceMappingURL=textBl.js.map
