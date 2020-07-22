@@ -11,6 +11,7 @@ var User = /** @class */ (function () {
             username: { type: String, required: true, unique: true },
             password: { type: String, required: true },
             tickets: { type: Number },
+            role: { type: String, required: true },
             completedChallenges: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "Challenge" }],
         });
         schema.plugin(arrayUniquePlugin);

@@ -10,12 +10,24 @@ var dotenv_1 = __importDefault(require("dotenv"));
 var http_1 = __importDefault(require("http"));
 var cors_1 = __importDefault(require("cors"));
 var baseController_1 = __importDefault(require("./controllers/baseController"));
+var express_session_1 = __importDefault(require("express-session"));
+var DB_1 = require("./dataLayer/DB");
+var connect_mongo_1 = __importDefault(require("connect-mongo"));
+var cookie_parser_1 = __importDefault(require("cookie-parser"));
 dotenv_1.default.config();
 var ExpressServer = /** @class */ (function () {
     function ExpressServer() {
+        var connetion = DB_1.DB.getConnection();
+        var MongoStore = connect_mongo_1.default(express_session_1.default);
+        var sessionStore = new MongoStore({
+            mongooseConnection: connetion,
+            collection: "sessions"
+        });
+        var cookieSettings = { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 };
         this.app = express_1.default();
         this.router = express_1.default.Router();
-        /* set the body parser */
+        this.app.use(cookie_parser_1.default());
+        this.app.use(express_session_1.default({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true, cookie: cookieSettings, store: sessionStore }));
         this.app.use(body_parser_1.default.json({ 'limit': '50mb' }));
         this.app.use(body_parser_1.default.urlencoded({ 'extended': true, 'limit': '50mb' }));
         this.app.use(cors_1.default({ 'origin': '*', 'methods': ['*', 'DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST'], 'allowedHeaders': ['*', 'authorization', 'content-type', 'Content-Language', 'Expires', 'Last-Modified', 'Pragma'] }));

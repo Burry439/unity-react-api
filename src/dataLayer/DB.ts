@@ -15,7 +15,6 @@ declare interface IModels {
 export class DB {
 
     private static instance: DB;
-    
     private _db: Connection; 
     private _models: IModels;
     private _adminModels : any;
@@ -50,13 +49,20 @@ export class DB {
         }
     }
 
+    public static getConnection(){
+        if (!DB.instance) {
+            DB.instance = new DB();
+        }
+        return DB.instance._db;
+    }
+
     public static get AdminModels() {
         if (!DB.instance) {
             DB.instance = new DB();
         }
         return DB.instance._adminModels;
     }
-
+    
     public static get Models() {
         if (!DB.instance) {
             DB.instance = new DB();

@@ -9,7 +9,7 @@ export default class UsereBl {
 
     public static async login (username : string, password : string, language :string) {
         try{
-            const user : IUser = await DB.Models.User.findOne({username : username}).populate("completedChallenges")
+            const user : IUser = await UsereBl.getUser(username,language)
             const errorMessage : string = language == "en" ?`username or password is incorrect` : "הודעת שגיאה בעברית"
             if(user === null){
                 throw new Error(errorMessage)
@@ -26,12 +26,26 @@ export default class UsereBl {
         }
     }
 
+    public static async getUser(username : string, language : string){
+        try{
+            const user : IUser = await DB.Models.User.findOne({username : username}).populate("completedChallenges")
+            const errorMessage : string = language == "en" ?`username or password is incorrect` : "הודעת שגיאה בעברית"
+            if(user === null){
+                throw new Error(errorMessage)
+            }
+            return user
+        } catch(e){
+            throw e
+        }
+    }
+
     public static async signUp(email : string, username : string, password : string){
         const hashedPassword : String = await bcrypt.hash(password, 10)
         const user : IUser = new DB.Models.User ({
             email: email,
             username: username,
             password: hashedPassword,
+            role: "user",
             tickets : 0
         })
         try{
@@ -45,12 +59,13 @@ export default class UsereBl {
         }
     }
 
-    public static async createUser(email : string, username : string, password : string){
+    public static async createUser(email : string, username : string, password : string, role: string){
         const hashedPassword : String = await bcrypt.hash(password, 10)
         const user : IUser = new DB.Models.User({
             email: email,
             username: username,
             password: hashedPassword,
+            role: role,
             tickets : 0
         })
         try{
@@ -63,7 +78,7 @@ export default class UsereBl {
     } 
     
     private static generateAccessToken (user : IUser){
-        return jwt.sign(user.toJSON(),process.env.ACCESS_TOKEN_SECRET, {expiresIn: "15s"})
+        return jwt.sign(user.toJSON(),process.env.ACCESS_TOKEN_SECRET)
     }
 }
 

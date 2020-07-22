@@ -5,6 +5,11 @@ import dotenv from 'dotenv'
 import http, { Server } from 'http'
 import cors from 'cors'
 import controllers from "./controllers/baseController";
+import session, { Store } from "express-session"
+import { DB } from './dataLayer/DB'
+import connectMongo, { MongoStoreFactory }  from "connect-mongo"
+import { Connection } from 'mongoose'
+import cookieParser from "cookie-parser"
 
 dotenv.config()
 
@@ -13,11 +18,18 @@ class ExpressServer {
     private router : express.Router;
     private server : Server;
     constructor(){
-
+      const connetion : Connection = DB.getConnection()
+      const MongoStore : MongoStoreFactory = connectMongo(session)
+      const sessionStore : Store = new MongoStore({
+        mongooseConnection : connetion,
+        collection : "sessions"
+      })
+      const cookieSettings = {httpOnly: true,  maxAge: 1000 *  60 * 60 * 24 }
+  
       this.app  = express () 
       this.router = express.Router () 
-    
-      /* set the body parser */
+      this.app.use(cookieParser())
+      this.app.use(session({secret: process.env.SESSION_SECRET,  resave: false,saveUninitialized: true, cookie: cookieSettings, store : sessionStore}))
       this.app.use ( bodyParser.json ( { 'limit' : '50mb' } ) )
       this.app.use ( bodyParser.urlencoded ( { 'extended' : true , 'limit' : '50mb' } ) )
       this.app.use ( cors ( { 'origin' : '*' , 'methods' : [ '*' , 'DELETE' , 'GET' , 'OPTIONS' , 'PATCH' , 'POST' ] , 'allowedHeaders' : [ '*' , 'authorization' , 'content-type', 'Content-Language', 'Expires', 'Last-Modified', 'Pragma'] } ) )

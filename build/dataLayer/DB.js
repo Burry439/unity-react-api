@@ -33,6 +33,12 @@ var DB = /** @class */ (function () {
             Text: this._models.Text
         };
     }
+    DB.getConnection = function () {
+        if (!DB.instance) {
+            DB.instance = new DB();
+        }
+        return DB.instance._db;
+    };
     Object.defineProperty(DB, "AdminModels", {
         get: function () {
             if (!DB.instance) {

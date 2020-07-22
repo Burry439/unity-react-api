@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from "express"
 import { IGame } from '../dataLayer/models/game';
 import GameBl from "../businessLogic/gameBl";
+import AuthHelper from "../helpers/authHelper";
 
 const router : express.Router = express.Router()
 
@@ -14,7 +15,7 @@ router.get("/game/getGame", async (req: Request, res: Response, next: NextFuncti
 	}
 })
 
-router.post('/game/createGame', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/game/createGame', AuthHelper.authenticateToken, AuthHelper.authenticateAdmin, async (req: Request, res: Response, next: NextFunction) => {
 	try{
 		const game : IGame = await GameBl.createGame(req.body.gameName);
 		res.send(game)

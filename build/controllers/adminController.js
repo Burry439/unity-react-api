@@ -41,8 +41,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var adminBl_1 = __importDefault(require("../businessLogic/adminBl"));
+var authHelper_1 = __importDefault(require("../helpers/authHelper"));
 var router = express_1.default.Router();
-router.get("/admin/get", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/admin/get", authHelper_1.default.authenticateToken, authHelper_1.default.authenticateAdmin, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var respone, e_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -62,7 +63,7 @@ router.get("/admin/get", function (req, res, next) { return __awaiter(void 0, vo
         }
     });
 }); });
-router.put("/admin/update", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.put("/admin/update", authHelper_1.default.authenticateToken, authHelper_1.default.authenticateAdmin, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var response, e_2;
     return __generator(this, function (_a) {
         switch (_a.label) {

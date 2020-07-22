@@ -1,11 +1,14 @@
 import{ Schema, model, Document, Model } from 'mongoose'
 const arrayUniquePlugin = require('mongoose-unique-array');
 
+
+
 export interface IUser extends Document {
   email: string;
   username: string;
   password: string;
-  tickets: number
+  tickets: number;
+  role: string;
   completedChallenges : Schema.Types.ObjectId[]
 }
 
@@ -20,6 +23,7 @@ export class User {
             username: { type: String, required: true, unique: true },
             password : {type : String, required: true},
             tickets : {type : Number},
+            role : {type : String, required: true},
             completedChallenges : [{type : Schema.Types.ObjectId, ref : "Challenge"}],
            
         });

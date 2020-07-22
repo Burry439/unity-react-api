@@ -52,7 +52,7 @@ var UsereBl = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        return [4 /*yield*/, DB_1.DB.Models.User.findOne({ username: username }).populate("completedChallenges")];
+                        return [4 /*yield*/, UsereBl.getUser(username, language)];
                     case 1:
                         user = _a.sent();
                         errorMessage = language == "en" ? "username or password is incorrect" : "הודעת שגיאה בעברית";
@@ -78,6 +78,29 @@ var UsereBl = /** @class */ (function () {
             });
         });
     };
+    UsereBl.getUser = function (username, language) {
+        return __awaiter(this, void 0, void 0, function () {
+            var user, errorMessage, e_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, DB_1.DB.Models.User.findOne({ username: username }).populate("completedChallenges")];
+                    case 1:
+                        user = _a.sent();
+                        errorMessage = language == "en" ? "username or password is incorrect" : "הודעת שגיאה בעברית";
+                        if (user === null) {
+                            throw new Error(errorMessage);
+                        }
+                        return [2 /*return*/, user];
+                    case 2:
+                        e_2 = _a.sent();
+                        throw e_2;
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
     UsereBl.signUp = function (email, username, password) {
         return __awaiter(this, void 0, void 0, function () {
             var hashedPassword, user, accessToken, respone, err_1, field;
@@ -90,6 +113,7 @@ var UsereBl = /** @class */ (function () {
                             email: email,
                             username: username,
                             password: hashedPassword,
+                            role: "user",
                             tickets: 0
                         });
                         _a.label = 2;
@@ -110,7 +134,7 @@ var UsereBl = /** @class */ (function () {
             });
         });
     };
-    UsereBl.createUser = function (email, username, password) {
+    UsereBl.createUser = function (email, username, password, role) {
         return __awaiter(this, void 0, void 0, function () {
             var hashedPassword, user, err_2, field;
             return __generator(this, function (_a) {
@@ -122,6 +146,7 @@ var UsereBl = /** @class */ (function () {
                             email: email,
                             username: username,
                             password: hashedPassword,
+                            role: role,
                             tickets: 0
                         });
                         _a.label = 2;
@@ -141,7 +166,7 @@ var UsereBl = /** @class */ (function () {
         });
     };
     UsereBl.generateAccessToken = function (user) {
-        return jsonwebtoken_1.default.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15s" });
+        return jsonwebtoken_1.default.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET);
     };
     return UsereBl;
 }());

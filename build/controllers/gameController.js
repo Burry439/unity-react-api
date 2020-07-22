@@ -41,6 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var gameBl_1 = __importDefault(require("../businessLogic/gameBl"));
+var authHelper_1 = __importDefault(require("../helpers/authHelper"));
 var router = express_1.default.Router();
 router.get("/game/getGame", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var game, e_1;
@@ -62,7 +63,7 @@ router.get("/game/getGame", function (req, res, next) { return __awaiter(void 0,
         }
     });
 }); });
-router.post('/game/createGame', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.post('/game/createGame', authHelper_1.default.authenticateToken, authHelper_1.default.authenticateAdmin, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var game, e_2;
     return __generator(this, function (_a) {
         switch (_a.label) {

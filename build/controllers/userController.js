@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var userBl_1 = __importDefault(require("../businessLogic/userBl"));
 var underscore_1 = __importDefault(require("underscore"));
-var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var authHelper_1 = __importDefault(require("../helpers/authHelper"));
 var router = express_1.default.Router();
 router.post('/user/login', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var language, loginRespone, e_1;
@@ -54,7 +54,10 @@ router.post('/user/login', function (req, res, next) { return __awaiter(void 0, 
                 return [4 /*yield*/, userBl_1.default.login(req.body.username, req.body.password, language)];
             case 1:
                 loginRespone = _a.sent();
-                res.send(loginRespone);
+                req.session.jwt = loginRespone.accessToken;
+                req.session.username = loginRespone.user.username,
+                    req.session.role = loginRespone.user.role;
+                res.json(loginRespone.user);
                 return [3 /*break*/, 3];
             case 2:
                 e_1 = _a.sent();
@@ -65,28 +68,65 @@ router.post('/user/login', function (req, res, next) { return __awaiter(void 0, 
         }
     });
 }); });
-router.post('/user/createuser', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, e_2;
+router.get('/user/getUser', authHelper_1.default.authenticateToken, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var language, user, e_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, userBl_1.default.createUser(req.body.email, req.body.username, req.body.password)];
+                console.log(req.session);
+                language = req.headers.language;
+                return [4 /*yield*/, userBl_1.default.getUser(req.session.username, language)];
             case 1:
                 user = _a.sent();
-                res.send(underscore_1.default.omit(user.toJSON(), "completedChallenges", "__v", "password"));
+                res.send(user);
                 return [3 /*break*/, 3];
             case 2:
                 e_2 = _a.sent();
-                res.status(401);
+                res.status(404);
                 next(e_2);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
     });
 }); });
+router.get('/user/logout', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        console.log("here");
+        try {
+            req.session.destroy(function () {
+                res.send("done");
+            });
+        }
+        catch (e) {
+            res.status(404);
+            next(e);
+        }
+        return [2 /*return*/];
+    });
+}); });
+router.post('/user/createuser', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var user, e_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, userBl_1.default.createUser(req.body.email, req.body.username, req.body.password, req.body.role)];
+            case 1:
+                user = _a.sent();
+                res.send(underscore_1.default.omit(user.toJSON(), "completedChallenges", "__v", "password"));
+                return [3 /*break*/, 3];
+            case 2:
+                e_3 = _a.sent();
+                res.status(401);
+                next(e_3);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
 router.post('/user/signup', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var signupResponse, e_3;
+    var signupResponse, e_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -94,29 +134,20 @@ router.post('/user/signup', function (req, res, next) { return __awaiter(void 0,
                 return [4 /*yield*/, userBl_1.default.signUp(req.body.email, req.body.username, req.body.password)];
             case 1:
                 signupResponse = _a.sent();
-                res.send(signupResponse);
+                req.session.jwt = signupResponse.accessToken;
+                req.session.username = signupResponse.user.username;
+                req.session.role = signupResponse.user.role;
+                res.send(signupResponse.user);
                 return [3 /*break*/, 3];
             case 2:
-                e_3 = _a.sent();
+                e_4 = _a.sent();
                 res.status(404);
-                next(e_3);
+                next(e_4);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
     });
 }); });
-var authenticateToken = function (req, res, next) {
-    var authHeader = req.headers["authorization"];
-    var token = authHeader && authHeader.split(' ')[1];
-    if (token == null)
-        return res.sendStatus(401);
-    jsonwebtoken_1.default.verify(token, process.env.ACCESS_TOKEN_SECRET, function (err, user) {
-        if (err)
-            return res.sendStatus(403);
-        //req.user = user
-        next();
-    });
-};
 exports.default = router;
 //for when i get around to authorization
 // const posts = [
