@@ -35,7 +35,6 @@ router.get('/user/getUser', AuthHelper.authenticateToken, async (req: Request, r
 
 
 router.get('/user/logout', async (req: Request, res: Response, next: NextFunction) => {
-	console.log("here")
 	try{
 		req.session.destroy(() =>{
 			res.send("done")

@@ -28,8 +28,8 @@ class ExpressServer {
   
       this.app  = express () 
       this.router = express.Router () 
-      this.app.use(cookieParser())
-      this.app.use(session({secret: process.env.SESSION_SECRET,  resave: false,saveUninitialized: true, cookie: cookieSettings, store : sessionStore}))
+      //this.app.use(cookieParser())
+      this.app.use(session({secret: process.env.SESSION_SECRET, unset: 'destroy', resave: false,saveUninitialized: false, cookie: cookieSettings, store : sessionStore}))
       this.app.use ( bodyParser.json ( { 'limit' : '50mb' } ) )
       this.app.use ( bodyParser.urlencoded ( { 'extended' : true , 'limit' : '50mb' } ) )
       this.app.use ( cors ( { 'origin' : '*' , 'methods' : [ '*' , 'DELETE' , 'GET' , 'OPTIONS' , 'PATCH' , 'POST' ] , 'allowedHeaders' : [ '*' , 'authorization' , 'content-type', 'Content-Language', 'Expires', 'Last-Modified', 'Pragma'] } ) )
@@ -38,6 +38,14 @@ class ExpressServer {
       this.app.use ("/", express.static ("build/frontend") )
       this.app.use((err : Error,req : Request,res :Response,next : NextFunction) =>{
         res.send(err.toString())
+      })
+
+      this.app.use("*", (req,res, next) =>{ 
+        if(!req.session.jwt){
+          req.session = null
+        }else{
+          next()
+        }
       })
 
       this.app.get('/*', function(req, res) {

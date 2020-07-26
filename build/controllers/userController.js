@@ -92,7 +92,6 @@ router.get('/user/getUser', authHelper_1.default.authenticateToken, function (re
 }); });
 router.get('/user/logout', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        console.log("here");
         try {
             req.session.destroy(function () {
                 res.send("done");
