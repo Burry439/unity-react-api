@@ -8,6 +8,8 @@ var AuthHelper = /** @class */ (function () {
     function AuthHelper() {
     }
     AuthHelper.authenticateToken = function (req, res, next) {
+        console.log("here");
+        console.log(req);
         var token = req.session.jwt;
         if (token == null)
             return res.sendStatus(401);

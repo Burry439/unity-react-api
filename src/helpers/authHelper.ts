@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken"
 export default class AuthHelper{
     
     public static  authenticateToken = (req: Request, res: Response, next: NextFunction) =>{
+        console.log("here")
+        console.log(req)
         const token : string =  req.session.jwt
         if(token == null) return res.sendStatus(401)
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err : Error,user : any) =>{

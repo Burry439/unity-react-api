@@ -55,6 +55,7 @@ router.post('/user/login', function (req, res, next) { return __awaiter(void 0, 
             case 1:
                 loginRespone = _a.sent();
                 req.session.jwt = loginRespone.accessToken;
+                req.session.cookie.serialize("jwt", loginRespone.accessToken.toString());
                 req.session.username = loginRespone.user.username,
                     req.session.role = loginRespone.user.role;
                 res.json(loginRespone.user);

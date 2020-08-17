@@ -12,6 +12,7 @@ router.post('/user/login', async (req: Request, res: Response, next: NextFunctio
 		const language : string = req.headers.language as string
 		const loginRespone : LoginSignUpRespone = await UserBl.login(req.body.username,req.body.password,language)
 		req.session.jwt = loginRespone.accessToken
+		req.session.cookie.serialize("jwt",loginRespone.accessToken.toString())
 		req.session.username = loginRespone.user.username,
 		req.session.role = loginRespone.user.role
  		res.json(loginRespone.user)

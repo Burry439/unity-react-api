@@ -25,8 +25,8 @@ var ExpressServer = /** @class */ (function () {
         var cookieSettings = { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 };
         this.app = express_1.default();
         this.router = express_1.default.Router();
-        //this.app.use(cookieParser())
-        this.app.use(express_session_1.default({ secret: process.env.SESSION_SECRET, unset: 'destroy', resave: false, saveUninitialized: false, cookie: cookieSettings, store: sessionStore }));
+        //this.app.use(coossskieParser())
+        this.app.use(express_session_1.default({ secret: process.env.SESSION_SECRET, unset: 'destroy', resave: false, saveUninitialized: false, cookie: { httpOnly: true, maxAge: 1000 * 60 * 60 * 24, sameSite: "none" }, store: sessionStore }));
         this.app.use(body_parser_1.default.json({ 'limit': '50mb' }));
         this.app.use(body_parser_1.default.urlencoded({ 'extended': true, 'limit': '50mb' }));
         this.app.use(cors_1.default({ 'origin': '*', 'methods': ['*', 'DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST'], 'allowedHeaders': ['*', 'authorization', 'content-type', 'Content-Language', 'Expires', 'Last-Modified', 'Pragma'] }));
@@ -37,7 +37,9 @@ var ExpressServer = /** @class */ (function () {
             res.send(err.toString());
         });
         this.app.use("*", function (req, res, next) {
+            console.log("i all");
             if (!req.session.jwt) {
+                console.log("in if");
                 req.session = null;
             }
             else {
