@@ -25,7 +25,7 @@ var ExpressServer = /** @class */ (function () {
         var cookieSettings = { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 };
         this.app = express_1.default();
         this.router = express_1.default.Router();
-        //this.app.use(cooddssskieParser())
+        //this.app.use(cooddssskiePddarser())
         this.app.use(express_session_1.default({ secret: process.env.SESSION_SECRET, unset: 'destroy', resave: false, saveUninitialized: false, cookie: { httpOnly: true, maxAge: 1000 * 60 * 60 * 24, sameSite: "none" }, store: sessionStore }));
         this.app.use(body_parser_1.default.json({ 'limit': '50mb' }));
         this.app.use(body_parser_1.default.urlencoded({ 'extended': true, 'limit': '50mb' }));
