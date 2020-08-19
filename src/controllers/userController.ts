@@ -24,7 +24,7 @@ router.post('/user/login', async (req: Request, res: Response, next: NextFunctio
 
 router.get('/user/getUser', AuthHelper.authenticateToken, async (req: Request, res: Response, next: NextFunction) => {
 	try{
-		console.log(req.session)
+		console.log(req.session.username)
 		const language : string = req.headers.language as string
 		const user : IUser = await UserBl.getUser(req.session.username,language)
 		res.send(user)

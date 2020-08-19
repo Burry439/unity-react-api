@@ -75,7 +75,7 @@ router.get('/user/getUser', authHelper_1.default.authenticateToken, function (re
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                console.log(req.session);
+                console.log(req.session.username);
                 language = req.headers.language;
                 return [4 /*yield*/, userBl_1.default.getUser(req.session.username, language)];
             case 1:
