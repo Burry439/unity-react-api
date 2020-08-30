@@ -15,6 +15,18 @@ export default class GameBl {
         }
     }
 
+    public static async getGames(){
+        try{
+            const games : IGame[] = await DB.Models.Game.find().populate("challenges")
+            if(!games){
+                throw new Error(`cant find any games`)
+            }
+            return games
+        }catch(e){
+            throw e
+        }
+    }
+
     public static async createGame(gameName : string){
         const game : IGame = new DB.Models.Game({
             gameName: gameName,

@@ -63,8 +63,28 @@ router.get("/game/getGame", function (req, res, next) { return __awaiter(void 0,
         }
     });
 }); });
+router.get('/game/getGames', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var games, e_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, gameBl_1.default.getGames()];
+            case 1:
+                games = _a.sent();
+                res.send(games);
+                return [3 /*break*/, 3];
+            case 2:
+                e_2 = _a.sent();
+                res.status(500);
+                next(e_2);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
 router.post('/game/createGame', authHelper_1.default.authenticateToken, authHelper_1.default.authenticateAdmin, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var game, e_2;
+    var game, e_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -75,9 +95,9 @@ router.post('/game/createGame', authHelper_1.default.authenticateToken, authHelp
                 res.send(game);
                 return [3 /*break*/, 3];
             case 2:
-                e_2 = _a.sent();
+                e_3 = _a.sent();
                 res.status(500);
-                next(e_2);
+                next(e_3);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }

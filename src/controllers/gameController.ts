@@ -15,6 +15,16 @@ router.get("/game/getGame", async (req: Request, res: Response, next: NextFuncti
 	}
 })
 
+router.get('/game/getGames',  async (req: Request, res: Response, next: NextFunction) => {
+	try{
+		const games : IGame[] = await GameBl.getGames()
+		res.send(games)
+	}catch(e){
+		res.status(500)
+		next(e)
+	}
+});
+
 router.post('/game/createGame', AuthHelper.authenticateToken, AuthHelper.authenticateAdmin, async (req: Request, res: Response, next: NextFunction) => {
 	try{
 		const game : IGame = await GameBl.createGame(req.body.gameName);

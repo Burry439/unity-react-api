@@ -62,9 +62,31 @@ var GameBl = /** @class */ (function () {
             });
         });
     };
+    GameBl.getGames = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var games, e_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, DB_1.DB.Models.Game.find().populate("challenges")];
+                    case 1:
+                        games = _a.sent();
+                        if (!games) {
+                            throw new Error("cant find any games");
+                        }
+                        return [2 /*return*/, games];
+                    case 2:
+                        e_2 = _a.sent();
+                        throw e_2;
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
     GameBl.createGame = function (gameName) {
         return __awaiter(this, void 0, void 0, function () {
-            var game, e_2;
+            var game, e_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -80,7 +102,7 @@ var GameBl = /** @class */ (function () {
                         _a.sent();
                         return [2 /*return*/, game];
                     case 3:
-                        e_2 = _a.sent();
+                        e_3 = _a.sent();
                         throw new Error("Looks like this game already exists");
                     case 4: return [2 /*return*/];
                 }
