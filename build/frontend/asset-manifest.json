@@ -1,20 +1,21 @@
 {
   "files": {
-    "main.css": "/static/css/main.d5aa2e99.chunk.css",
-    "main.js": "/static/js/main.3bf86998.chunk.js",
-    "main.js.map": "/static/js/main.3bf86998.chunk.js.map",
+    "main.css": "/static/css/main.aaac5e53.chunk.css",
+    "main.js": "/static/js/main.3c09414d.chunk.js",
+    "main.js.map": "/static/js/main.3c09414d.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.8dc0443e.js",
     "runtime-main.js.map": "/static/js/runtime-main.8dc0443e.js.map",
     "static/css/2.2b61584d.chunk.css": "/static/css/2.2b61584d.chunk.css",
-    "static/js/2.5f22a303.chunk.js": "/static/js/2.5f22a303.chunk.js",
-    "static/js/2.5f22a303.chunk.js.map": "/static/js/2.5f22a303.chunk.js.map",
+    "static/js/2.de687193.chunk.js": "/static/js/2.de687193.chunk.js",
+    "static/js/2.de687193.chunk.js.map": "/static/js/2.de687193.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.30feef7f4c00f003bcd05a75d0faf6db.js": "/precache-manifest.30feef7f4c00f003bcd05a75d0faf6db.js",
+    "precache-manifest.f67c16a0ec1f30b372dc7c6646df0103.js": "/precache-manifest.f67c16a0ec1f30b372dc7c6646df0103.js",
     "service-worker.js": "/service-worker.js",
     "static/css/2.2b61584d.chunk.css.map": "/static/css/2.2b61584d.chunk.css.map",
-    "static/css/main.d5aa2e99.chunk.css.map": "/static/css/main.d5aa2e99.chunk.css.map",
-    "static/js/2.5f22a303.chunk.js.LICENSE.txt": "/static/js/2.5f22a303.chunk.js.LICENSE.txt",
+    "static/css/main.aaac5e53.chunk.css.map": "/static/css/main.aaac5e53.chunk.css.map",
+    "static/js/2.de687193.chunk.js.LICENSE.txt": "/static/js/2.de687193.chunk.js.LICENSE.txt",
     "static/media/game.css": "/static/media/ArcadeLight-d196.de4adaab.ttf",
+    "static/media/challengeComplete.mp3": "/static/media/challengeComplete.63c543fd.mp3",
     "static/media/font-awesome.min.css": "/static/media/fontawesome-webfont.fee66e71.woff",
     "static/media/getFetch.cjs": "/static/media/getFetch.013f0b90.cjs",
     "static/media/logo.png": "/static/media/logo.3fa434f6.png",
@@ -23,8 +24,8 @@
   "entrypoints": [
     "static/js/runtime-main.8dc0443e.js",
     "static/css/2.2b61584d.chunk.css",
-    "static/js/2.5f22a303.chunk.js",
-    "static/css/main.d5aa2e99.chunk.css",
-    "static/js/main.3bf86998.chunk.js"
+    "static/js/2.de687193.chunk.js",
+    "static/css/main.aaac5e53.chunk.css",
+    "static/js/main.3c09414d.chunk.js"
   ]
 }
