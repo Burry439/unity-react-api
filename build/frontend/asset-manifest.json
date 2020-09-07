@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/static/css/main.b0d8e9fd.chunk.css",
-    "main.js": "/static/js/main.2c51a4ef.chunk.js",
-    "main.js.map": "/static/js/main.2c51a4ef.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.8dc0443e.js",
-    "runtime-main.js.map": "/static/js/runtime-main.8dc0443e.js.map",
-    "static/css/2.2b61584d.chunk.css": "/static/css/2.2b61584d.chunk.css",
-    "static/js/2.9011a6ba.chunk.js": "/static/js/2.9011a6ba.chunk.js",
-    "static/js/2.9011a6ba.chunk.js.map": "/static/js/2.9011a6ba.chunk.js.map",
+    "main.css": "/static/css/main.3f5a3e10.chunk.css",
+    "main.js": "/static/js/main.64837ae4.chunk.js",
+    "main.js.map": "/static/js/main.64837ae4.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.c8a21426.js",
+    "runtime-main.js.map": "/static/js/runtime-main.c8a21426.js.map",
+    "static/css/2.34637586.chunk.css": "/static/css/2.34637586.chunk.css",
+    "static/js/2.47bf4095.chunk.js": "/static/js/2.47bf4095.chunk.js",
+    "static/js/2.47bf4095.chunk.js.map": "/static/js/2.47bf4095.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.db1663307ce8e47a7fa4c4a8d03c5d60.js": "/precache-manifest.db1663307ce8e47a7fa4c4a8d03c5d60.js",
+    "precache-manifest.065db2719a42557509becccb3be34742.js": "/precache-manifest.065db2719a42557509becccb3be34742.js",
     "service-worker.js": "/service-worker.js",
-    "static/css/2.2b61584d.chunk.css.map": "/static/css/2.2b61584d.chunk.css.map",
-    "static/css/main.b0d8e9fd.chunk.css.map": "/static/css/main.b0d8e9fd.chunk.css.map",
-    "static/js/2.9011a6ba.chunk.js.LICENSE.txt": "/static/js/2.9011a6ba.chunk.js.LICENSE.txt",
-    "static/media/game.css": "/static/media/ArcadeLight-d196.de4adaab.ttf",
+    "static/css/2.34637586.chunk.css.map": "/static/css/2.34637586.chunk.css.map",
+    "static/css/main.3f5a3e10.chunk.css.map": "/static/css/main.3f5a3e10.chunk.css.map",
+    "static/js/2.47bf4095.chunk.js.LICENSE.txt": "/static/js/2.47bf4095.chunk.js.LICENSE.txt",
+    "static/media/game.module.scss": "/static/media/ArcadeLight-d196.de4adaab.ttf",
     "static/media/challengeComplete.mp3": "/static/media/challengeComplete.63c543fd.mp3",
     "static/media/font-awesome.min.css": "/static/media/fontawesome-webfont.fee66e71.woff",
     "static/media/getFetch.cjs": "/static/media/getFetch.013f0b90.cjs",
@@ -22,10 +22,10 @@
     "static/media/tenor.gif": "/static/media/tenor.ed2dee88.gif"
   },
   "entrypoints": [
-    "static/js/runtime-main.8dc0443e.js",
-    "static/css/2.2b61584d.chunk.css",
-    "static/js/2.9011a6ba.chunk.js",
-    "static/css/main.b0d8e9fd.chunk.css",
-    "static/js/main.2c51a4ef.chunk.js"
+    "static/js/runtime-main.c8a21426.js",
+    "static/css/2.34637586.chunk.css",
+    "static/js/2.47bf4095.chunk.js",
+    "static/css/main.3f5a3e10.chunk.css",
+    "static/js/main.64837ae4.chunk.js"
   ]
 }
